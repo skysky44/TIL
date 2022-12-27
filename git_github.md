@@ -1,14 +1,12 @@
-### Git & GitHub
+# Git & GitHub
 
-## CLI vs GUI
+## CLI
+   - Command Line Interface
+   - 명령 기반의 인터페이스
 
-  # CLI
-    - Command Line Interface
-    - 명령 기반의 인터페이스
-
-  # GUI
-    - Graphical User Interface
-    - 그래픽 기반의 인터페이스
+## GUI
+   - Graphical User Interface
+   - 그래픽 기반의 인터페이스
 
   `인터페이스란 내가 무언가를 조작하는 하나의 접면`
 
@@ -23,3 +21,24 @@
   - rm -r 폴더명 : 폴더 삭제 가능(포함한 모든 폴더와 파일 같이 삭제)
   - ~ : 홈 디렉토리
   - pwd : 현재 디렉토리 출력
+
+## 버전관리
+### Git
+  - 분산 버전 관리 시스템
+  - 로컬에서도 버전 기록 관리
+
+  - Working directory : 파일의 변경사항
+  - Staging area : 버전으로 기록하기 위한 파일 변경사항의 목록
+  - Repository : 커밋(버전)들이 기록 되는 곳
+  
+  ### Git 명령어
+  - git init : git 폴더 생성
+  - git add : staging area로
+  - git commit -m '메시지' : repository로
+  - git status : 현재 상태(?)
+  - git log : 커밋 상태
+
+
+  ### 궁금한 점
+  - HEAD -> master 의미
+  - git reset 사용법
