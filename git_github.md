@@ -1,12 +1,12 @@
 # Git & GitHub
 
 ## CLI
-   - Command Line Interface
-   - 명령 기반의 인터페이스
+ - Command Line Interface
+ - 명령 기반의 인터페이스
 
 ## GUI
-   - Graphical User Interface
-   - 그래픽 기반의 인터페이스
+  - Graphical User Interface
+  - 그래픽 기반의 인터페이스
 
   `인터페이스란 내가 무언가를 조작하는 하나의 접면`
 
