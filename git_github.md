@@ -139,3 +139,84 @@ $ git pull <원격저장소> <브랜치> #원격저장소로부터 pull
 ### 참고자료
 - [Git초심자설명](https://backlog.com/git-tutorial/kr/)
 - [Git완벽책](https://git-scm.com/book/en/v2)
+
+
+# Git & GitHub 3일차
+## 학습목표
+- Branch의 목적을 알고 활용할 수 있다.
+- Branch 병합과정의 상황을 이해하고 충돌을 해결할 수 있다.
+
+## Branch
+- 독립적인 작업 흐름을 만들어서 협업하기 위해 존재
+- 버전들을 나눠서 관리하고 작업
+
+## Branch 명령어
+```bash
+$ git branch <branch name> #브랜치 생성
+$ git checkout <branch name> #브랜치 이동, 최근에는 checkout 대신 swich도 사용
+$ git checkout -b <branch name> #브랜치 생성하고 이동(한번에)
+$ git branch -d #브랜치 삭제
+$ git branch #브랜치 목록 확인 가능
+```
+> 브랜치 만드는 것 잊지말기
+
+## Merge
+- branch에서 작업했던 것들을 병합하는 것
+- 다른 파일을 수정하고 커밋한 경우에는 문제가 없지만 같은 파일을 수정한 경우 충돌이 발생하고 이를 해결해야 함
+- fast-forward : master에 변경사항 없어 단순히 앞으로 이동
+- merge commit: master에 변경사항 있어 병합 커밋 발생 
+
+## Merge 명령어
+```bash
+$ git merge <branch name>
+```
+## Merge 참고
+- merge하고 충돌이 일어났을 때 git commit 입력하면 커밋메시지가 작성되어 있음.
+
+## Gitflow(간단하게/프로젝트마다 다를 수 있음)
+- master(main) : 배포 가능 상태의 코드
+- develop(main) : 메인 개발. feature branch로 나뉘거나 버그 수정 등 개발 진행 , 이후 relaease branch로 분기
+- feature branches : 앞으로 반영될 것
+- release branches : 개발 완료후 test나 버그 수정하는 것
+- hotfixs : 긴급한 버그 수정, 현재 버그 ex.긴급패치
+
+## Pull Request(PR) 순서
+
+
+1. Fork(나의 원격저장소로 가져옴)
+- 원격저장소에 접근할 수 있는 권한(collaborator로 초대 받은 상태)이 있으면 fork 을 안하고도 작업이 가능(fork 안해도 됨)
+- 원격저장소에 접근 권한이 없을 때 자신의 원격저장소로 fork한 뒤에 작업하고 PR함.
+- github에서 진행
+
+> 원격저장소 초대 유무에 따라 fork 하거나 안하고 진행
+
+2. Clone(나의 로컬저장소로 복제)
+```bash
+$ git clone <url>
+$ git remote -v # 잘 되었는지 확인
+```
+3. pull -> add -> commit -> push (상황에 따라 적용) 작업
+
+4. github 나의 원격저장소의 PR페이지에서 fork해온 branch(?)로 PR 함.
+- 주의 : 제목 입력 안하고 PR하면 커밋메시지가 PR 제목이 됨 
+
+
+## 유용한 명령어와 팁
+- 파일 하나만 add 하려다가 git add . 한 경우(2통에서 1통으로  돌리기)
+```
+$ git resore --staged<file>
+```
+- 워킹디렉토리의 변경사항을 돌리거나 버리고 싶을 때(1통에서 없애버리기)
+```
+$ git restre <file>
+```
+- 커밋메시지 신중하게 쓰기 git commit -amend 사용하면 메시지는 바꿀 수 있지만 커밋해시값이 바뀐다(push 하면 conflict 발생). 혼자하면 상관없지만 협업할 때 곤란하다.
+- 커밋메시지 작성할 때 앞에 Add, Upadate, Fix, Merge 등부터 일관성 있게 작성하면 좋음.
+
+## 참고(공부할 것)
+- [좋은커밋메시지7가지약속](https://meetup.nhncloud.com/posts/106)
+- [좋은커밋메시지영어사전](https://blog.ull.im/engineering/2019/03/10/logs-on-git.html)
+
+
+## 깃헙 프로필 만들기
+- 원격저장소 이름을 username으로 설정
