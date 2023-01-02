@@ -7,6 +7,7 @@
 - 코드 유지보수 용이
 
 ## 좋은 커밋 메시지를 작성하기 위한 약속
+
 - 제목과 본문은 한 줄 띄워 분리 - git log oneline
 - 제목은 영문 기준 50자 이내(한글 25자)
 - 제목 첫글자 대문자 - 영문법
@@ -18,12 +19,14 @@
 > 제목 + 본문 작성하려면 닫기 따옴표를 마지막에 작성
 
 ## 좋은 커밋 메시지 영어 사전
+
 - 동명사보다 명사 사용 - 간결하게
 - 관사 사용 자제
 - 부정문 don't 사용 - Don't use~
 - 오타 수정은 Fix typo
 
 ## 좋은 커밋 메시지 단어 목록
+
 - Fix - 올바르지 않은 동작을 고친 경우
 - Add - 코드나 테스트, 예제, 문서 등의 추가
 - Remove - 코드 삭제가 있을 때, Clean이나 Eliminate도 사용
@@ -47,6 +50,7 @@
 - Pass - 파라미터를 넘기는 처리에 주로 사용(?)
 
 ## 참고 및 출처
+
 - [좋은커밋메시지7가지약속](https://meetup.nhncloud.com/posts/106)
 - [좋은커밋메시지영어사전](https://blog.ull.im/engineering/2019/03/10/logs-on-git.html)
 - [Git Commit Message Convention](https://hyeokjaelee.github.io/good-commit-message)
