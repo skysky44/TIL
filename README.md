@@ -5,6 +5,6 @@
 ## 목차
 
 - [Markdown](markdown.md)
-- [Git&GitHub](git_github.md)
-- [Good_commit_message](good_commit_message.md)
-- [Python](python.md)
+- [Git&GitHub](\01_Git_Github\git_github.md)
+- [Good_commit_message](\01_Git_Github\good_commit_message.md)
+- [Python](02_PYTHON\python.md)
