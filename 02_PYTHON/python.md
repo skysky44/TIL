@@ -97,3 +97,117 @@
 - clear : 터미널 지우기
 - 한 줄 선택 : ctrl + L 또는 shift+ 화살표 아래
 - 주석 처리 하기 : ctrl+/
+
+# Python 2일차
+
+## string Interpolation
+
+- 문자열을 변수를 활용하여 만드는 법
+- %-formatting(과거에 많이 씀)
+
+```python
+name = kim
+score = 4.5
+print('Hello, %s' % name)
+print('내 성적은 %d' % score) # 4
+print('내 성적은 %f' % score) # 4.500000
+```
+
+- f-stiring(현재 많이 씀)
+
+```python
+name = kim
+score = 4.5
+print(f'Hello, {name}! 성적은 {score}')
+```
+
+## 형 변환(Typecasting)
+
+- 자료형 변환(Typecasting)
+  - 파이썬에서 데이터 형태 서로 변환 가능
+  - 암시적 형 변환(Implicit) : 사용자가 의도하지 않고, 파이썬 내부적으로 자료형을 변환
+    - bool
+    - NUmeric type(int, float, complex)
+    ```
+    True + 3
+    # 4
+    3 + 5.0
+    # 8.0
+    ```
+  - 명시적 현 변환(Explicit) : 사용자가 특정 함수를 활용하여 의도적으로 자료형을 변환 하는 경우
+  - int : str(형식에 맞는 문자열만 가능), float -> int
+  - float : str(형식에 맞는 문자열만 가능), int -> float
+  - str : int, float, list, tuple, dict -> str
+- 변수의 Type을 아는 것 중요
+
+## 제어문(Control Statement)
+
+- 파이썬은 기본적으로 위에서부터 아래로 순차적 명령 수행
+
+## 조건문(Conditional Statement)
+
+```python
+if <expression>:
+    # Run this Code block
+else:
+    # Run this Code block
+```
+
+- expression에 참/거짓에 대한 조건식
+- 콜론(:) : 이것이 if 문이다를 나타냄
+- 띄어쓰기 : 스페이스 4칸.. 약속(?)
+
+- 복수 조건문
+
+```python
+if <expression>:
+    # Run this Code block
+elif <expression>:
+    # Run this Code block
+elif <expression>:
+    # Run this Code block
+else:
+    # Run this Code block
+```
+
+- 중첩 조건문
+
+```python
+if <expression>:
+    # Run this Code block
+    if <expression>:
+    # Run this Code block
+else:
+    # Run this Code block
+```
+
+- 레인지(Range)
+  - 기본형 : range(start)
+  - 범위지정 : range(start, stop)
+  - 범위 및 스텝 지정 : range(start, stop, step)
+  - 레인지는 숫자의 시퀀스를 나타내기 위해 사용
+
+## 반복문(Loop Statement)
+
+- while문
+- fot문
+  - for문은 시퀀스(string, tuple, list, range)를 포함한 순회가능한 객체(iterable)요소를 모두 순회함
+  - 처음부터 끝까지 모두 순회. 별도의 종료조건 불필요
+  - 순회가능한 객체 : 컨테이너형(string, tuple, list, range, set, dicionary)
+- 반복제어 : break, continue, for-else
+  - break : 반복문 종료
+  - continue : continue 이후의 코드 블록은 수행하지 않고 다음 반복을 수행(다시 처음부터 수행)
+  - for-else 끝까지 반복문을 실행한 이후에 else문 실행
+    - break를 통해 중간에 종료되는 경우 else문은 실행되지 않음(break에 안걸리면 else문 실행)
+  ```python
+  for char in 'apple':
+      if char == 'b':
+        print('b!')
+        break
+  else:
+      print('b가 없습니다.')
+  ```
+
+## 참고
+
+- [파이썬튜터](https://pythontutor.com/) : 단계별 실행 과정을 볼 수 있음
