@@ -190,7 +190,18 @@ else:
 ## 반복문(Loop Statement)
 
 - while문
-- fot문
+
+  - 종료조건에 해당하는 코드를 통해 반복문 종료
+  - 조건이 참인 경우 들여쓰기 된 코드 블록이 실생됨
+  - 코드 블록 실행 후 다시 조건식 검사하고 반복적 실행
+  - 무한루프 하지 않도록 종료조건 반드시 필요
+
+  ```python
+  while <expression>:
+    # Code bolock
+  ```
+
+- for문
   - for문은 시퀀스(string, tuple, list, range)를 포함한 순회가능한 객체(iterable)요소를 모두 순회함
   - 처음부터 끝까지 모두 순회. 별도의 종료조건 불필요
   - 순회가능한 객체 : 컨테이너형(string, tuple, list, range, set, dicionary)
@@ -211,3 +222,64 @@ else:
 ## 참고
 
 - [파이썬튜터](https://pythontutor.com/) : 단계별 실행 과정을 볼 수 있음
+
+# python 3일차
+
+## 함수(Function)
+
+- 함수를 사용하는 이유 : Abstraction(추상) 복잡한 내용을 숨기고, 기능에 집중하여 사용할 수 있음. `재사용성, 가독성, 생산성`
+- 특정한 기능을 하는 코드의 조각(묶음)
+- 사용자 함수(Custom Function)
+
+```python
+def function_name
+    # code block
+    return returning_value
+```
+
+- 함수 기본 구조
+  - 선언과 호출(define & call)
+  - 입력(Input) : parameters
+  - 범위(Scope)
+  - 결과값(Output) : return
+
+## 내장 함수
+
+- print(\*objects, sep=' ', end='\n')
+
+### 자주 사용하는 함수
+
+- len(s) : 객체으 길이를 반환. 인자는 시퀀스 또는 컬렉션
+- sum(iterable, start=0) : start 및 iterable(반복가능객체)의 항목을 왼쪽에서 오른쪽으로 합하고 합계를 돌려줌. 시작값은 문자열 될 수 없음
+- max(iterable) : 가장 큰 항목이나 두 개 이상의 인자 중 가장 큰 것을 반환. 여러 항목이 최댓값이면 함수는 처음 만난 항목을 반환
+- min(iterable) : 가장 작은 항목이나 두 개 이상의 인자 중 가장 작은 것을 반환. 여러 항목이 최솟값이면 함수는 처음 만난 항목을 반환
+
+### 수학 관련 함수
+
+- abs(x) : 절댓값 반환
+- divmod(a, b) : 두 수를 받아 몫과 나머지 반환
+- pow(base, exp, mod=None) : base의 exp 거듭제곱을 반환
+- round(number, ndigit=None) : 반올림
+
+### 논리 관련 함수
+
+- all(iterable) : iterable의 모든 요소가 참이면(또는 iterable이 비어 있으면) True 반환
+- any(iterable) : iterable의 요소 중 어느하나라도 참이면 True 반환. 비어 있으면 False 반환
+
+### 기타 함수
+
+- bin(x) : 정수를 '0b'접두사가 붙은 이진 문자열로 반환
+- hex(x) : 정수를 '0x'접두사가 붙은 16진수 문자열로 반환
+- oct(x) : 정수를 '0o'접두사가 붙은 8진수 문자열로 반환
+- ord(c) : 문자 c에 대응되는 유니코드 정수로 반환
+- chr(i) : 정수 i 에 대응 되는 유니코드 문자로 반환
+
+## 함수 응용
+
+- map(function, iterable)
+
+  - 순회 가능한 데이터구조(iterable)의 모든 요소에 함수(function)를 적용하고, 그 결과를 map object로 반환
+
+  ```python
+  n , m = map(int, input().split())
+  ```
