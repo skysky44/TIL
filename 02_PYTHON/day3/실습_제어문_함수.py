@@ -90,6 +90,15 @@ for n in range(len(number_list)):
         max_number = number_list[n]
 print(max_number)
 
+# 최종
+number_list = [1, 2, 3, 4, 5]
+max_number = number_list[0]
+for n in number_list:
+    if n >= max_number:
+        max_number = n
+print(max_number)
+
+
 number_list = [1, 1, 1]
 max_number = number_list[0]
 for n in range(len(number_list)):
@@ -97,19 +106,27 @@ for n in range(len(number_list)):
         max_number = number_list[n]
 print(max_number)
 
+# 최종
+number_list = [1, 1, 1]
+max_number = number_list[0]
+for n in number_list:
+    if n >= max_number:
+        max_number = n
+print(max_number)
+
 # 문제 7
 # 리스트에 저장된 정수 중 가장 작은 값을 출력하세요.
 
 number_list = [1, 2, 3, 4, 5]
 min_number = number_list[0]
-for n in range(len(number_list)):
-    if number_list[n] <= min_number:
-        min_number = number_list[n]
+for n in number_list:
+    if n <= min_number:
+        min_number = n
 print(min_number)
 
 number_list = [5, 5, 5, 2]
 min_number = number_list[0]
-for n in range(len(number_list)):
-    if number_list[n] <= min_number:
-        min_number = number_list[n]
+for n in number_list:
+    if n <= min_number:
+        min_number = n
 print(min_number)
