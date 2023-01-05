@@ -223,7 +223,7 @@ else:
 
 - [파이썬튜터](https://pythontutor.com/) : 단계별 실행 과정을 볼 수 있음
 
-# python 3일차
+# Python 3일차
 
 ## 함수(Function)
 
