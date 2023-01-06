@@ -283,3 +283,253 @@ def function_name
   ```python
   n , m = map(int, input().split())
   ```
+
+# python 4일차
+
+## 컬렉션(Collections)
+
+### 딕셔너리(Dictionary)
+
+- 키-값(key-value)쌍으로 이뤄진 모음(collection) -키(key)
+  - 불변 자료형만 가능(리스트, 딕셔너리 등은 불가능)
+  - 값(values)
+    - 어떠한 형태든 관계 없음
+- 키와 값은 : 로 구분. 개별요소는 , 로 구분
+- 변경 가능하며(mutable), 반복 가능함(iteable)
+  - 딕셔너리는 반복하면 키가 반환 됨
+- key와 value가 쌍으로 이뤄진 자료구조
+  - key는 변경 불가능한 데이터(immutable)만 활용 가능
+    -string, integer, gloat, boolean, tuple, range
+  - value는 모든 값으로 설정 가능(list, dictionary 등)
+- 딕셔너리에 키와 값의 쌍을 추가 가능
+- 이미 해당 키가 있다면 기존 값이 변경
+- 키 삭제 .pop()
+- 키 없으면 KeyError
+- 딕셔너리는 기본적으로 key를 순회, key를 통해 값을 활용
+- 추가 메서드를 활용하여 순회 가능
+
+```python
+  - keys() : key로 구성
+  - values() : value 로 구성
+  - items(): (key, value)의 튜블로 구성된 결과
+
+grades = {'Jeong': 80, 'Hwan': 100}
+print(grades.keys())
+print(grades.values())
+print(grades.items())
+```
+
+## 모듈(Module)
+
+- 모듈 : 다양한 기능을 하나의 파일로
+- 패키지 : 다양한 기능을 하나의 폴더로
+- 라이브러리 : 다양한 패키지를 하나의 묶음으로
+- 이것을 관리하는 관리자(pip)
+
+- 모듈
+  - 특정 기능을 하는 코드를 파이썬 파일(.py) 단위로 작성한 것
+- 패키지
+  - 특정 기능과 관련된 여러 모듈의 집합
+  - 패키지 안에는 또 다른 서브 패키지 포함
+
+## 파이썬 표준 라이브러리
+
+- [파이썬에 기본적으로 설치된 모듈과 내장함수](https://docs.python.org/ko/3/library/index.html)
+
+### ramdom
+
+- 숫자/수학 모듈 중 의사 난수 생성
+  - 임의의 숫자 생성, 무작위 요서 선택, 무작위 비복원 추출
+- random.randint(a, b)
+  -a 이상 b 이하의 임의의 정수 N 반환
+- random.choice(seq)
+  - 비어있지 않은 시퀀스에서 임의의 요소 반환
+  - seq가 비어있으면 IndexError
+- random.shuffle(seq)
+  - 시퀀스를 제자리에서 섞습니다.
+- random.sample(population, k)
+  - 무작위 비복원 추출한 결과인 k 길이의 리스트를 반환
+
+### datetime
+
+- 날짜와 시간을 조작하는 객체 제공
+- 사용 가능한 데이터 타입
+  - datetime.date, datetime.time, datetime.datetime, datetime,timedelta 등
+- datetime.date(year, month, day)
+  - 모든 인자가 필수. 인자는 특정 범위의 정수이어야 함.
+  - 이 범위를 벗어나는 인자가 주어지면 ValueError 발생
+- datetime.date.today()
+  - 현재 지역의 날짜 반환
+- datetime.datetime.today()
+  - 현재 지역 datetime 반환. now()활용하면 타임존 설정
+
+### os
+
+- OS(운영체제)를 조작하기위한 인터페이스 제공
+- os.listdir(path=',')
+  - path(경로)에 의해 주어진 디렉터리에 있는 항목들의 이름을 담고 있는 리스트를 반환
+  - 리스트는 임의의 순서로 나열되며, 특수 항목은 포함하지 않음
+- os.mkdir(path)
+  - path라는 디렉터리 만듦
+- os.chdir(path)
+  - path를 변경
+
+## 파이썬 패키지
+
+- 파이썬 패키지 관리자(pip)
+  - Pypi(Python package Index)에 저장된 외부 패키지들을 설치하도록 도와주는 패키지관리 시스템
+- 패키지 관리자(pip) 명령어
+  - 패키지 설치
+    - 최신 버전/특정 버전/최소 버전을 명시하여 설치 가능
+    - 이미 설치되어 있는 경우 이미 설치되어 있음을 알리고 아무것도 하지 않음
+  ```bash
+  $ pip install SomePackage
+  $ pip install SomePackage==1.0.5
+  $ pip install 'SomePackage>=1.0.4'
+  ```
+  - 패키지 삭제
+    - pip는 패키지를 업그레이드 하는 경우 과거 버전을 자동으로 지워줌
+  ```
+  $ pip uninstall SomePackage
+  ```
+  - 패키지 목록 및 특정 패키지 정보
+  ```
+  $ pip list
+  ```
+
+## 에러/예외 처리(Error/Exceptin Handling)
+
+### 디버깅
+
+- 제어가 되는시점 조건/반복, 함수
+- 값이 변경되는 시점
+- branches
+  - 모든 조건이 원하는대로 동작하는지
+- for loops
+  - 반복문에 진입한는지, 원하는 횟수만큼 실행되는지
+- while loops
+  - for loops와 동일, 종료조건이 제대로 동작하는지
+- function
+
+  - 함수 호출시, 함수 파라미터, 함수 결과
+
+- print 함수 활용
+- 개발환경(text edito, IDE)등에서 제공하는 기능 활용
+- Python tutor 활용(단순 파이썬 코드인 경우)
+- 뇌컴파일, 눈디버깅
+
+### 에러메시지
+
+- 에러메시지 발생하는 경우 : 해당 위치 찾아 해결
+- 로직에러가 발생하는 경우
+  - 명시적 에러 메시지 없이 예상과 다른 결과가 나온 경우
+
+### 에러와 예외
+
+- 문법에러(Suntax Error)
+- 예외(Exeption)
+  - 실행 중 프로그램 실행을 멈춤
+  - 실행 중 감지되는 에러를 예외(Exception)라고 부름
+  - 여러 타입으로 나타남, 타입이 메시지의 일부로 출력 됨
+  - 모든 내장 예외는 Exception Class를 상속받아 이뤄짐
+  - 사용자 정의 예외를 만들어 관리할 수 있음
+
+### 예외처리
+
+- try문(statement)/ ecept절(clause)을 이용하여 예외 처리 할 수 있음
+- try문
+  - 오류가 발생할 가능성 있는 코드를 실행
+  - 예외가 발생되지 않으면, exept 없이 실행 종료
+- ecept문
+  - 예외가 발생하면, except절이 실행
+  - 예외 상황을 처리하는 코드를 받아서 적절한 조치를 취함
+- 작성방법
+
+```python
+try:
+  <try 명령문>
+except 예외그룹-1 as 변수-1 :
+  <예외처리 명령문 1>
+except 예외 그룹-2 as 변수-2 :
+  <예외처리 명령문 2>
+finally:#선택사항
+  <finally명령문>
+```
+
+- try : 코드를 실행
+- except : try문에서 예외가 발생시 실행
+- else : try문에서 예외가 발생하지 않으면 실행
+- finally : 예외 발생 여부와 관계없이 항상 실행
+
+### 예외 발생시키기
+
+- raise를 통해 예외를 강제로 발생
+
+```
+raise <표현식>(메시지)
+```
+
+# Python 5일차
+
+## 파일 입출력
+
+### 파일 입력
+
+- open(file, mode='r', encoding=None)
+  - file : 파일명
+  - mode : 텍스트 모드
+  - encoding : 인코딩 방식(일반적으로 utf-8 활용)
+  - 'r' : open for reading(default)
+  - 'w' : open for writing, truncating th file first(덮어쓰기)
+  - 'a' : open for writing, appending to th end of file if it exists
+
+### 파일 활용
+
+- 파일 객체 활용
+
+```python
+f = open('file', 'w')
+f.closed
+```
+
+- with 키워드 활용
+
+```python
+with open('file') as f:
+    read_data = f.read()
+```
+
+- with 키워드 사용하지 않으면, 'f.close()'를 반드시 호출하여 종료시켜야 오류가 발생하지 않음. 따라서 일반적으로 with 키워드를 활용하여 작성
+
+### JSON
+
+- JSON은 자바스크립트 객체 표기법으로 개발환경에서 많이 활용되는 데이터 양식으로 웹 어플리케이션에서 데이터를 전송할 때 일반적으로 사용
+- 문자 기반(텍스트) 데이터포멧으로 다수의 프로그래밍 환경에서 쉽게 활용 가능함
+  - 텍스트를 언어별 데이터 타입으로 변환시키거나
+  - 언어별 데이터 타입을 적절하게 텍스트로 변환
+
+### JSON 파일의 활용
+
+- 객체(리스트, 딕셔너리 등)를 JSON으로 변환
+
+```python
+import json
+x = [1, 'simple', 'list']
+json.dumps(x)
+# [1, "simple", "list"]
+```
+
+- JSON을 객체(리스트, 딕셔너리 등)로 변환
+
+```python
+x = json.load(f)
+```
+
+### pprint
+
+- 임의의 파이썬 데이터 구조를 예쁘게(정렬해서) 인쇄 할 수 있는 기능 제공
+
+```python
+from pprint import pprint
+pprint()
+```
