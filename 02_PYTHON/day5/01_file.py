@@ -1,0 +1,8 @@
+f = open('hello.txt', 'r', encoding='utf8')
+text = f.readline()
+print(text)
+text = f.readline()
+print(text)
+text = f.readline()
+print(text)
+f.close()
