@@ -284,7 +284,7 @@ def function_name
   n , m = map(int, input().split())
   ```
 
-# python 4일차
+# Python 4일차
 
 ## 컬렉션(Collections)
 
@@ -533,3 +533,95 @@ x = json.load(f)
 from pprint import pprint
 pprint()
 ```
+
+# Python 6일차
+
+## 튜플(Tuple)
+
+- 불변한 값들의 나열(`값 변경 불가능`): List와 차이
+- 순서 O 서로 다른 타입의 요소를 가질 수 있음
+- 변경 불가(immutable), 반복 가능(iterable)
+- () 형태이며, 요소는 콤마(,)로 구분
+- 직접 만들어서 활용보다는 일반적으로 파이썬 내부에서 활용 ex) .items나 divmod
+
+## 세트(Set)
+
+- 유일한 값들의 모음(collection)
+- 순서가 없고 중복된 값이 없음(특정 값 접근 불가)
+- 변경 가능(mutable), 반복 가능(iterable)
+- ({})또는 set()로 생성
+- {} 딕셔너리는 키와 밸류의 합이고 세트는 그냥 값들의 합
+- .add(): 값 추가
+- .remove(): 값 삭제
+- 중복 값을 쉽게 제거 가능
+- 순서대로 출력하라고 하면 set 말고 반복문 써야 함. 순서가 다시 정렬되기 때문.
+
+## 데이터 타입과 메서드
+
+### 메서드(methods)
+
+- 타입.`메서드`()
+- 객체에서 실행되는 함수(?)
+- 메서드 중 어떠한 것은 오류를 발생시키고 어떠한 것은 특정 값을 반환
+
+### 문자열 메서드
+
+- 문자열 탐색/검증
+
+![image](https://user-images.githubusercontent.com/110805149/211324811-7700d2be-b6a5-434b-9542-db89ce5854a3.png)
+
+- 문자열 변경
+
+![image](https://user-images.githubusercontent.com/110805149/211325129-145a72a3-bebb-4a10-95aa-5bc05e550f58.png)
+
+### 리스트 메서드
+
+![image](https://user-images.githubusercontent.com/110805149/211325599-d78f9462-9eb4-4080-9a05-ab4d3e8d5c09.png)
+
+- .remove : 값을 기준으로 삭제
+- .pop : index 기준으로 삭제
+- .extend : 리스트 + 리스트
+- .sort 쓰면 원본 변경, 메서드는 원본 변경(.reverse 동일)
+- sorted 는 함수라서 원본 그대로
+- 어떠한 객체, 타입이 어떠한 메서드를 조작하는지 알고 써야 함
+
+### 세트 메서드
+
+![image](https://user-images.githubusercontent.com/110805149/211325796-1ac728be-1577-4e21-bc6b-e9de079de996.png)
+
+- pop은 랜덤하게 항목을 반환: set는 인덱스가 없기 때문
+
+### 딕셔너리 메서드
+
+![image](https://user-images.githubusercontent.com/110805149/211326098-a23d21a1-fc64-451b-adf5-8691c15cee06.png)
+
+- dict['k'] 키가 없으면 KeyError
+- get(k) 키가 없으면 None 나옴
+- get(k, 0) 하면 없으면 None 말고 0 나옴
+
+## 간단 정리
+
+- 숫자형
+- Boolean
+- None
+
+### 시퀀스
+
+- string : 문자의 나열 반복 O 변경 X
+- list : 순서 O 반복 O 변경 O
+- tuple : 순서 O 반복 O 변경 X
+- range : 숫자의 나열 반복 O 변경 X
+
+### 컬렉션
+
+- set : 유일한 값들의 모음. 순서 X 반복 O 변경 O
+- dictionary : 키-값들의 모음. 순서 X 반복 O 변경 O
+
+### 참고
+
+- for 문 끝까지 돌면 for-else로확인 가능!!
+- 기술 관련 뉴스나 자료 볼 수 있는 곳
+  - [GeekNews](https://news.hada.io/)
+  - [요즘it](https://yozm.wishket.com/magazine/list/develop/)
+  - 커리어리
+  - 퍼블리
