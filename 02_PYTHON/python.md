@@ -625,3 +625,137 @@ pprint()
   - [요즘it](https://yozm.wishket.com/magazine/list/develop/)
   - 커리어리
   - 퍼블리
+
+# Python 7일차
+
+## 사용자 정의 함수
+
+![image](https://user-images.githubusercontent.com/110805149/211582037-bde5d93a-6e37-4853-b93b-fdce606a13b6.png)
+
+- 함수 정의 할 때 가장 중요한 것
+  입력, 출력, 타입!!
+
+```python
+def foo(): # foo는 홍길동 같은 것이라는 설이 있다.
+    retrun True
+
+foo()
+```
+
+## 함수의 결과값(Output)
+
+- 함수는 반드시 하나만 리턴
+- 리턴과 동시에 실행 종료
+- 명시적인 return이 없는 경우 : None
+- 여러 값을 return 하는 경우 : tuple
+
+## 함수의 입력(Input)
+
+- Parameter : 함수를 실행할 때 내부에서 사용되는 식별자
+- Argument : 함수를 호출 할 때, 넣어주는 값
+
+```python
+def foo(ham): # han : parameter
+    retrun True
+
+foo('spam') # 'spam' : argument
+```
+
+### Argument란
+
+- 함수 호출 시 parameter를 통해 전달되는 값
+- 필수 Argument : 반드시 전달되어야 하는 것
+- 선택 Argument : 값을 전달하지 않아도 되는 경우 기본 값이 전달
+
+#### positional argument : 기본적으로 위치에 따라 전달
+
+```python
+def add(x, y):
+    return x + y
+
+add(2,3)
+```
+
+#### keyword arguments
+
+- 직접 변수의 이름으로 특정 Argument를 전달할 수 있음
+- keyword argument 다음에 positional argument 활용 안됨
+
+```python
+def add(x, y):
+    return x + y
+
+add(x = 2, y = 3)
+add(2, y = 5)
+```
+
+### Default Arguments Values
+
+- 기본값을 지정하여 함수 호출 시 argument 값을 설정하지 않아도 됨
+
+```python
+def add(x, y = 0):
+    return x + y
+
+add(2) # 2 + 0
+```
+
+- ex. print(\*objects, sep=' ', end='\n', file=sys.stdout, flush=False)
+
+### 정해지지 않은 개수의 arguments
+
+- 여러 개의 Positional Argument를 하나의 필수 parameter로 받아서 사용
+- Argument 들은 튜플로 묶여 처리, parameter에 \*를 붙여 표현
+- print함수는 오브젝트에 \*이붙어서 입력이 여러 개이더라도 나옴
+
+```python
+def add(*args):
+    for arg in args:
+      print(arg)
+
+add(2)
+add(2, 3, 4, 5) # 둘다 가능
+```
+
+### 정해지지 않은 개수의 keyword arguments
+
+- 함수가 임의의 개수 Argument를 keyword Argument로 호출될 수 있도록 지정
+- Argument들은 딕셔너리로 묶여 처리, parameter에 \*\* 붙여 표현
+
+```python
+def family(**kwargs):
+    for key, value in kwargs.items(): #교재내용에 items() 추가
+      print(key, ':', value)
+
+family(father='John', mother='Jane', me='John Jr.')
+```
+
+### 함수의 scope
+
+- LEGB
+
+```python
+# Built-in
+
+# Global
+
+def foo()
+    # Enclosing Function Local
+    def foo():
+        # Local
+```
+
+- 함수 내부에서 글로벌 변수 변경
+
+```python
+a = 5
+def boo():
+    global a  # global scope의 a를 바꿔줌
+    a = 3
+    print(a)
+```
+
+## 참고
+
+- utf-8 UTF-8 UTF8 다 되는 건가요?
+  - UTF-8이 표준이라고 한다.(나머지는 경우에 따라)
