@@ -839,3 +839,159 @@ def boo():
 - 클래스는 객체들의 타입..
 - 클래스 내부의 함수는 모두다 메서드
 - 참고사항은 아니지만.. 오늘 배운 클래스와 인스턴스는 추가 학습이 필요
+
+# python 9일차
+
+- 교재 옮김
+
+## 클래스
+
+- 클래스 속성(attribute)
+  - 한 클래스의 모든 인스턴스라도 똑같은 값을 가지고 있는 속성
+  - 클래스 선언 내부에서 정의
+  - <classname>.<name>으로 접근 및 할당
+- 클래스 메서드
+
+  - 클래스가 사용할 메서드
+  - @classmethod 데코레이터를 사용하여 정의
+    - 데코레이터 : 함수를 어떤 함수로 꾸며서 새로운 기능부여
+  - 호출 시, 첫번째 인자로 클래스(cls)가 전달 됨
+
+- 스태틱 메서드
+
+  - 인스턴스나 클래스를 사용하지 않는 메서드
+  - @staticmethod 데코레이터를 사용하여 정의
+  - 호출 시, 어떠한 인자도 전달되지 않음(클래스 및 인스턴스 정보에 접근/수정 불가)
+
+- 메서드 정리
+
+  - 인스턴스나 클래스를 활용하거나 조작하지 않는 경우?
+    - 스태틱 메서드로 정의함. 전달 되는 인자 없음
+  - 인스턴스를 활용하거나 조작하는 경우?
+    - 인스턴스 메서드로 정의하고, 첫번째 인자로 전달된 인스턴스를 조작(일반적으로 self)
+    - 클래스를 활용하거나 조작하는 경우?
+      - 클래스 메서드로 정의하고, 첫번째 인자로 전달된 클래스를 조작(일반적으로 cls)
+
+- 인스턴스와 클래스 간의 이름 공간
+
+## 상속
+
+- 상속
+  - 두 클래스 사이 부모 - 자식 관계를 정립하는 것
+    - ex. 모든 파이썬 클래스는 object를 상속 받음
+- 부모에 정의된 속성이나 메서드를 활용하거나 오버라이딩(재정의)를 하여 활용
+  - 코드의 재사용성을 높이고 클래스 간의 계층적 관계를 활용함
+- isinstance(object, classinfo)
+  - classinfo의 instance거나 subclass\*인 경우 True
+- issubclass(class, classinfo)
+  - 다시 찾기
+- super()
+  - 자식클래스에서 부모클래스를 사용하고 싶은 경우 활용
+- 메서드 오버라이딩
+  - 상속 받은 메서드를 재정의
+    - 상속받은 클래스에서 같은 이름의 메서드로 덮어씀
+    - 부모 클래스의 메서드를 실행시키고 싶은 경우 super를 활용
+- 다중 상속
+  - 파이썬은 두개 이상의 클래스를 상속 받을 수 있음
+  - 상속 받은 모든 클래스의 요소를 활용 가능함
+  - 중복된 속성이나 메서드가 있는 경우 상속 순서에 의해 결정됨
+
+## 파이썬 응용 심화
+
+### 추가 문법
+
+#### 조건표현식
+
+- 조건 표현식을 일반적으로 조건에 따라 값을 할당 할 때 활용
+
+```python
+<true인 경우 값> if <expression> else <false인 경우 값>
+
+value = num if num >= 0 else -num
+
+절대값 저장 코드
+```
+
+#### enumerate 순회
+
+- 인덱스 객체를 쌍으로 담은 열거형(enumerate) 객체 반환
+  - (index, value)형태의 tuple로 구성된 열거 객체를 반환
+
+```pythone
+member = ['민수', '영희', '철수']
+
+for i in range(len(number)):
+    print(f'{i} {member[i]}')
+
+
+for i, member in enumerate(members):
+    print(i, member)
+```
+
+#### List Comprehension
+
+```python
+[<expression> fo <변수> in <iterable>]
+
+[<expression> fo <변수> in <iterable> if <조건식>]
+
+```
+
+```python
+cubic_list = []
+for number in range(1, 4):
+    cubic_list.append(number**3)
+print(cubic_list)
+
+[number**3 for number in rage(1, 4)]
+```
+
+- Dictionary Comprehension
+  - 표현식과 제어문을 통해 특정한 값을 가진 리스트를 간결하게 생성한는 방법
+
+```python
+{key: value for <변수> in <iterable>}
+{key: value for <변수> in <iterabla> if <조건식>}
+```
+
+```python
+cubic_dict = {}
+for number in range(1, 4):
+    cubic_dict[number] = number ** 3
+print(cubic_dict)
+
+{number: number**3 for number in range(1,4)}
+```
+
+#### lambda [parameter] : 표현식
+
+- 람다함수
+  - 표현식을 계산한 결과값을 반환하는 함수로, 이름이 없는 함수여서 익명함수라고도 불림
+  - 특징
+    - return문을 가질 수 없음
+    - 간편 조건문 외 조건문이나 반복문을 가질 수 없음
+  - 장점
+  - 함수를 정의해서 사용하는 것보다 간결하게 사용 가능
+  - def를 사용할 수 없는 곳에서도 사용가능
+
+### 파이썬 버전별 업데이트
+
+#### Type annotation
+
+- 변수마다 설명을 덧붙일 수 있음
+
+#### Positional-only parameters
+
+- 함수를 정의할 때 어떻게 호출해야 하는지를 함께 지정
+  - a, b는 위치만
+  - c, d는 위치 및 키워드 모두
+  - e, f 키워드만
+
+```python
+def f(a, b, /, c, d, *, e, f):
+    print(a, b, c, d, e, f)
+```
+
+```python
+def add(x: int, y:int)
+```
