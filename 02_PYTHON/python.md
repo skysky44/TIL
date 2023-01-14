@@ -995,3 +995,34 @@ def f(a, b, /, c, d, *, e, f):
 ```python
 def add(x: int, y:int)
 ```
+
+### requests
+
+- 사용 예시
+
+```python
+import requests
+from pprint import pprint
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+def search_movie(title):
+
+    BASE_URL = 'https://api.themoviedb.org/3'
+    path = '/search/movie'
+    params = {
+        'api_key': os.getenv('api_key'),
+        'language': 'ko-KR',
+        'region': 'KR',
+        'query': title
+    }
+
+    response = requests.get(BASE_URL+path, params=params).json()
+    if response['results'] == []:
+        return None
+    else:
+        return response['results'][0]['id']
+```
