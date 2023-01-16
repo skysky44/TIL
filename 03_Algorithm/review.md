@@ -1,0 +1,3 @@
+- 백준 2480 주사위 문제
+- [a != b !=c는 a != b and a != c and b != c 와 다르다.](https://stackoverflow.com/questions/58395948/why-a-b-c-is-not-equal-to-a-b-and-a-c-and-b-)
+- a != b !=c는 실제로 a != b and b != c와 같음
