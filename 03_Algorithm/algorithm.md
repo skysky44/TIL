@@ -219,3 +219,65 @@ s[start:end:step]
 
 - Collections Counter
 - 반복가능한 무언가를 넣으면 딕셔너리로 만들어 줌
+
+# 알고리즘 5일차
+
+- 프로그램 = 데이터구조 + 알고리즘
+- 자료를 어떻게 저장하고 활용(조작, CRUD)할 것인가.
+
+## 스택(Stack)
+
+- LIFO(last in first out, 후입선출)
+- top에서 push 하고 pop이 이루어짐
+- 사용 예시
+  - 이전 작업의 기억(뒤집기, 되돌리기, 뒤로가기)
+  - 괄호매칭(여는 괄호를 다 담고 pop해서 닫는 괄호와 맞으면 ok)
+  - 함수호출(재귀 호출), 백트래킹, DFS(깊이 우선 탐색)
+- 파이썬 리스트에서 append, pop, a[-1](top 의미)
+
+```python
+K = int(input())
+nums = []
+for k in range(K):
+    num = int(input())
+    if num == 0:
+        nums.pop()
+    else:
+        nums.append(num)
+print(sum(nums))
+```
+
+## 큐(Queue)
+
+- 한쪽 끝에서 데이터를 넣고 다른 한쪽 끝에서 데이터를 빼는 구조
+- FIFO(first in first out, 선입선출)
+- dequeue: 큐 맨앞 데이터 가져오는 행위
+- enqueue: 큐 맨뒤 데이터 삽입하는 행위
+- 사용 예시
+  - 순서와 대기
+  - 프로세스 관리(데이터 버퍼)
+  - 클라이언트/서버(Message Queue)
+  - BFS(너비 우선 탐색), 다익스트라 - 우선순위큐
+- 파이썬 리스트에서 pop(0), append() 사용
+- 파이썬은 `pop(0)(시간복잡도 O(n))` 대신 내장 된 collections의 depue의 `popleft(시간 복잡도 O(1))` 빠르게 사용 가능
+
+```python
+from collections import deque
+N = int(input())
+customer = deque(list(map(int, input().split())))
+result = []
+cnt = 0
+for n in range(N):
+    a = customer.popleft()
+    if a not in result:
+        result.append(a)
+    else:
+        cnt += 1
+print(cnt)
+```
+
+## 참고&팁
+
+- 문제 풀이에서 최근 것이 필요하거나 순서대로 꺼내야하면 큐 스택 생각 해보기
+- 딕셔너리에서 items 사용해서 키-값으로 조작 가능(둘 다 동시에)
+- in 'string' 으로 하나씩 확인 가능
