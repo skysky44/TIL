@@ -19,26 +19,25 @@ for _ in range(T):
     else:
         print('NO')
 
+# # for-else문으로 다시해보기
 
-# if 뒤에 리스트: 하면 리스트가 비어있으면  0이고 안비어있으면 1인듯
-
-
-# 실패한 코드
+# from collections import deque
 # T = int(input())
 # for _ in range(T):
-#     parenthesis = list(input())
+#     parenthesis = deque(list(input()))
 #     stack = []
-#     for p in parenthesis:
+#     while len(parenthesis) > 0:
+#         p = parenthesis.popleft()
 #         if p == '(':
 #             stack.append(p)
 #         elif p == ')':
-#             try:
-#                 if stack.pop() == '(':
-#                     pass
+#             if len(stack) != 0:
+#                 stack.pop()
+#     else:
+#         if len(parenthesis) == 0 and len(stack) == 0:
+#             print('YES')
+#         else:
+#             print('NO')
 
-#                 else:
-#                     print('NO')
-#                     break
-#             except:
-#                 print('NO')
-#                 break
+
+# if 뒤에 리스트: 하면 리스트가 비어있으면  0이고 안비어있으면 1인듯
