@@ -417,3 +417,65 @@ matrix1=[[0]*m for _ in range(n)]
   - 점을 set 에 넣고 중복제거 하고 set 길이 출력
 
 - sum(map(sum, ... )) 사용가능
+
+# 알고리즘 9일차
+
+## 완전탐색(Exhaustive Search)
+
+### 무식하게 다해보기(Brute-force)
+
+- 모든 경우의 수를 탐색
+
+```python
+for i in range(n-2):
+    for j in range(i+1, n-1):
+        for k in range(j+1, n):
+# range 범위 주의!!
+```
+
+### 델타 탐색(Delta Search)
+
+- 이차원 리스트에서 상하좌우 탐색
+- 행과 열의 변량인 -1, +1을 델타(delta)값 이라 함
+  ![image](https://user-images.githubusercontent.com/110805149/216060505-d956d83a-9670-4b62-a020-c567a038f29f.png)
+
+```python
+x = 1
+y = 1
+# 행을 x 열을 y로 표현(또는 행을 r 열을 c)
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+
+# # 상
+# nx = x + dx[0]
+# ny = y + dy[0]
+# # 하
+# nx = x + dx[1]
+# ny = y + dy[1]
+# # 좌
+# nx = x + dx[2]
+# ny = y + dy[2]
+# # 우
+# nx = x + dx[3]
+# ny = y + dy[3]
+
+# for i in range(4):
+#     nx = x + dx[i]
+#     ny = y + dy[i]
+
+# 상하좌우 튜플로도 가능
+
+# 이동 후 범위 확인, 끝 부분, 엣지 확인
+for i in range(4):
+    nx = x + dx[i]
+    ny = y + dy[i]
+    # 범위 안에 있으면 갱신하기(3*3 행렬 기준)
+    if 0 <= nx < 3 and 0 <= ny < 3:
+        x = nx
+        y = ny
+```
+
+## 참고
+
+- revesed(range(m)): range를 역으로
+-
