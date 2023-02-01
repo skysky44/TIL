@@ -404,10 +404,49 @@ matrix1=[[0]*m for _ in range(n)]
 - 행렬의 행과 열을 서로 맞바꾸는 것
 - 꼭 빈 매트릭스를 만들어 주고 시작해야함
 
-## 회전
+```python
+matrix = [
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9, 0, 1, 2]
+]
+# 빈 매트릭스 꼭 만들기
+transpose = [[0]*3 for i in range(4)]
+
+for x in range(3):
+    for y in range(4):
+        transpose[y][x] = matrix[x][y]
+```
+
+## 회전(Rotate)
 
 - 왼쪽 90도 회전, 오른쪽 90도 회전
 - N-행-1
+
+```python
+matrix = [
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9, 0, 1, 2]
+]
+# m*n
+m = 3
+n = 4
+rotate = [[0]*m for i in range(n)]
+
+# 왼쪽 90도(어렵)
+for i in range(m):
+    for j in range(n):
+        rotate[n-1-j][i] = matrix[i][j]
+
+# 오른쪽 90도
+for i in range(m):
+    for j in range(n):
+        rotate[j][m-i-1] = matrix[i][j]
+
+# for 문 인덱스 만들기 어려움
+# zip을 사용하면 쉬움(흑마법)
+```
 
 ## 참고
 
@@ -477,5 +516,22 @@ for i in range(4):
 
 ## 참고
 
-- revesed(range(m)): range를 역으로
--
+- reversed(range(m)): range를 역으로
+- zip으로 회전, 전치하기
+
+```python
+matrix = [
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9, 0, 1, 2]
+]
+#
+transpose = [[0]*3 for i in range(4)]
+print(transpose)
+
+for x in range(3):
+    for y in range(4):
+        transpose[y][x] = matrix[x][y]
+
+print(transpose)
+```
