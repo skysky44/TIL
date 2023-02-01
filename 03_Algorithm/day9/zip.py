@@ -5,7 +5,7 @@ matrix = [
 ]
 print(*matrix)
 print(list(zip(*matrix)))
-
+# 전치
 # 1 5 9
 # 2 6 10
 # 3 7 11
@@ -17,5 +17,3 @@ print(list(zip(*matrix[::-1])))
 # 10 6 2
 # 11 7 3
 # 12 8 4
-
-print(list(zip(*matrix)))
