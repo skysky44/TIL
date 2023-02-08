@@ -23,10 +23,10 @@ while True:
                 stack = []
                 stack.append((x, y))
                 while stack:
-                    x, y = stack.pop()
+                    a, b = stack.pop()
                     for i in range(8):  # 상하좌우대각선 모두 확인
-                        if 0 <= x+dx[i] < h and 0 <= y+dy[i] < w:  # 범위안에 있는지 확인
-                            if grid[x+dx[i]][y+dy[i]] == 1:  # 1이 있다면 0으로 바꿔줌
-                                grid[x+dx[i]][y+dy[i]] = 0
-                                stack.append((x+dx[i], y+dy[i]))  # 탐색 반복
+                        if 0 <= a+dx[i] < h and 0 <= b+dy[i] < w:  # 범위안에 있는지 확인
+                            if grid[a+dx[i]][b+dy[i]] == 1:  # 1이 있다면 0으로 바꿔줌
+                                grid[a+dx[i]][b+dy[i]] = 0
+                                stack.append((a+dx[i], b+dy[i]))  # 탐색 반복
     print(cnt)
