@@ -100,7 +100,7 @@ LIMIT 5;
 
 -- 문제 12
 SELECT
-    jobTitle, COUNT(*)
+    jobTitle, COUNT(*) AS count_job
 FROM
     employees
 GROUP BY
@@ -111,7 +111,7 @@ ORDER BY
 
 -- 문제 13
 SELECT 
-    country, COUNT(*)
+    country, COUNT(*) AS count_country
 FROM
     customers
 GROUP BY
@@ -132,7 +132,7 @@ ORDER BY
 
 -- 문제 15
 SELECT 
-   YEAR(orderDate) AS year, COUNT(orderNumber)
+   YEAR(orderDate) AS 'year', COUNT(orderNumber)
 FROM
     orders
 GROUP BY
@@ -140,18 +140,18 @@ GROUP BY
     
 -- 문제 16
 SELECT 
-    productLine, MAX(quantityInStock)
+    productLine, MAX(quantityInStock) AS max_stock
 FROM
     products
 GROUP BY productLine
 HAVING
-    MAX(quantityInStock) <= 9000;
+    MAX(quantityInStock) < 9000;
 
 -- 문제 17
 SELECT 
     ordernumber,
-    SUM(quantityOrdered),
-    SUM(priceEach * quantityOrdered)
+    SUM(quantityOrdered) AS itemsCount,
+    SUM(priceEach * quantityOrdered) AS total
 FROM
     orderdetails
 GROUP BY orderNumber

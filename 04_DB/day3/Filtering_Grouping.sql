@@ -85,14 +85,15 @@ WHERE
 --     firstName LIKE '____'
 --     AND firstName LIKE '%y';
 
-    SELECT 
+SELECT 
     firstName, officeCode
 FROM
     employees
-ORDER BY
-    officeCode DESC
-LIMIT 3, 5;
--- LIMIT 5 OFFSET 3; 가능
+ORDER BY officeCode DESC
+
+LIMIT 3 , 5;
+-- LIMIT [offset,] row_count;
+-- LIMIT 5 OFFSET 3;도 가능
 
 SELECT
     country, AVG(creditLimit) AS avgOfCreditLimit
