@@ -139,3 +139,109 @@ ORDER BY
   - General Editors
   - Tab key inserts spaces instead of tabs
 - Beautify Query: 워크벤치에서 Ctrl + B -> 정렬(들여쓰기 등)
+
+# DB 3일차
+
+## Filtering data
+
+- Clause(절)
+
+  - DISTINCT: 조회 결과에서 중복된 레코드 제거, SELECT 바로 뒤에 씀
+
+  ```sql
+  SELECT DISTINCT
+  ```
+
+  - WHERE: 조회 시 특정 검색 조건 지정
+
+  ```sql
+  SELECT
+    lastName, firstName, officeCode
+  FROM
+      employees
+  WHERE
+      officeCode BETWEEN 1 AND 4;
+
+  SELECT
+    lastName, firstName, officeCode
+  FROM
+      employees
+  WHERE
+    officeCode IN (1,3,4);
+  --     officeCode = 1
+  --     OR officeCode = 3
+  --     OR officeCode = 4 ;
+  ```
+
+  - LIMIT: 조회하는 레코드 수를 제한
+
+  ```sql
+  SELECT
+      firstName, officeCode
+  FROM
+      employees
+  ORDER BY officeCode DESC
+
+  LIMIT 3 , 5;
+  -- offset3, 이면 3 건너뛰고 4번째부터 5개
+  -- LIMIT [offset,] row_count;
+  -- LIMIT 5 OFFSET 3;도 가능
+  ```
+
+- Operator(연산자)
+  - BETWEEN: 숫자 범위에 해당하는지 확인
+  - IN: 값이 특정 목록 안에 있는지 확인
+  - LIKE: 값이 특정 패턴에 일치하는지 확인 - ildcard Characters
+    % 0개 이상의 문자열과 일치하는지 확인
+    \_ 단일 문자와 일치하는지 확인
+  - Comparison(비교 연산자)
+  - Logical(논리 연산자)
+
+## Grouping data
+
+- GROUP BY: 레코드를 그룹화하여 요약본 생성 with 집계 함수(Aggregation Functions)
+- Aggregation Functions: 값에 대한 계산을 수행하고 단일한 값을 반환하는 함수
+  - ex. SUM, AVG, MAX, MIN, COUNT
+- GROUP BY후 조건이 있다면 HAVING(WHERE 아닌) 사용
+- HAVING: GROUP BY 없으면 WHERE처럼 동작
+
+```sql
+SELECT
+    country, AVG(creditLimit)
+FROM
+    customers
+-- WHERE 안됨
+--     AVG(creditLimit) > 80000
+GROUP BY
+    country
+HAVING
+    AVG(creditLimit) > 80000;
+
+
+```
+
+## SELECT statement 실행 순서
+
+- FROM -> WHERE -> GROUP BY -> HAVING -> SELECT ->ORDER BY -> LIMIT
+
+1. 테이블에서(FROM)
+2. 특정 조건에 맞춰(WHERE)
+3. 그룹화하고(GROUP BY)
+4. 만약 그룹중에 조건이 있다면 맞추고(HAVING)
+5. 조회하여(SELECT)
+6. 정렬하고(ORDER BY)
+7. 특정 위치의 값을 가져온다(LIMIT)
+
+## 참고
+
+- MyWQL 오름차순 정렬 시 NULL이 NULL 아닌 값보다 먼저 나옴
+- 코드가 복잡해지면 AS로 별칭 많이 사용함
+- 연도별 그룹화하는 법
+  ```sql
+  SELECT
+     YEAR(orderDate) AS 'year', COUNT(orderNumber)
+  FROM
+      orders
+  GROUP BY
+      YEAR(orderDate);
+  ```
