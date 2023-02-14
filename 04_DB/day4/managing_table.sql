@@ -1,0 +1,36 @@
+CREATE TABLE examples (
+    examId INT AUTO_INCREMENT,
+    lastname VARCHAR(50) NOT NULL,
+    firstname VARCHAR(50) NOT NULL,
+    PRIMARY KEY (examId)
+);
+
+SHOW COLUMNS FROM examples;
+
+DROP TABLE examples;
+
+ALTER TABLE
+    examples
+ADD
+    country VARCHAR(100) NOT NULL;
+    
+ALTER TABLE examples
+ADD age INT NOT NULL,
+ADD address VARCHAR(100) NOT NULL;
+
+ALTER TABLE examples
+MODIFY address VARCHAR(50) NOT NULL;
+
+ALTER TABLE examples
+MODIFY lastname VARCHAR(10) NOT NULL,
+MODIFY firstname VARCHAR(10) NOT NULL;
+
+ALTER TABLE examples
+CHANGE COLUMN state2 state VARCHAR(100) NOT NULL;
+
+ALTER TABLE examples
+DROP COLUMN address;
+
+ALTER TABLE examples
+DROP COLUMN state,
+DROP COLUMN age;
