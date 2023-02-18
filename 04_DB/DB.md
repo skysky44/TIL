@@ -421,3 +421,154 @@ LIMIT 2;
   - INSERT INTO VALUES
   - UPDATE SET
   - DELETE FROM
+
+# DB 5일차
+
+## Multi Table Queries
+
+## Joining tables
+
+### JOIN 종류
+
+- INNER JOIN
+- OUTER JOIN
+  - LEFT JOIN
+  - RIGHT JOIN
+
+### INNER JOIN
+
+- 두 테이블에서 `값이 일치하는 레코드만` 결과로 반환
+- FROM 절 뒤 메인테이블 지정(LEFT)
+- INNE JOIN 절 뒤 조인할 테이블 지정(RIGHT)
+- ON 키워드 이후 조인 조건 작성
+  - 필드가 양쪽 모두 존재할 경우 USING(필드명) 사용
+
+```SQL
+SELECT articles.id , content, name -- 겹칠 때 테이블명.id
+FROM articles
+INNER JOIN users
+    ON articles.userId = users.id;
+```
+
+### LEFT JOIN
+
+- 오른쪽 테이블의 일치하는 레코드와 함께 왼쪽 테이블 모든 레코드 반환
+- 왼쪽 테이블 한 개 레코드에 여러 개 오른쪽 테이블 레코드가 일치하면 해당 왼쪽 레코드 여러번 표시
+
+```SQL
+SELECT
+    contactFirstName, orderNumber, status
+FROM
+    customers
+LEFT JOIN orders
+    ON customers.customerNumber = orders.customerNumber
+WHERE orderNumber IS NULL;
+```
+
+### RIGHT JOIN
+
+- 왼쪽 테이블의 일치하는 레코드와 함께 오른쪽 테이블 모든 레코드 반환
+- 오른쪽 테이블 한 개의 레코드에 여러개의 왼쪽 레코드가 일치할 경우 해당 오른쪽 레코드 여러 번 표시
+
+```SQL
+SELECT
+    employeeNumber, firstName, customerNumber, contactFirstName
+FROM
+    customers
+RIGHT JOIN employees
+    ON  employees.employeeNumber = customers. salesRepEmployeeNumber
+WHERE customerNumber IS NULL;
+```
+
+## JOIN 정리
+
+![image](https://user-images.githubusercontent.com/110805149/219874544-52e329a7-b6da-491f-893d-6acf51f55480.png)
+
+- 합집합 왼쪽 UNION 오른쪽 (중복 삭제)
+- 중복 유지하고 싶으면 UNION ALL
+
+## 참고
+
+- 관계형 데이터베이스 : JOIN 중요함
+- JOIN 할 때 길면 복잡해서 AS를 많이 사용함
+
+# DB 6일차
+
+## Nested queries(중첩 쿼리)
+
+### Subquery: 단일 쿼리문에 여러 테이블 데이터 결합
+
+- 조건에 따라 하나 이상의 테이블에서 데이터 검색하는 경우 사용
+- `FROM 절` 에서 사용하는 `subquery`는 별도의 파생된 테이블로 간주 되기 때문에 MYSQL에서는 반드시 `별칭 지정` 필요
+
+```sql
+SELECT customerNumber, amount, contactFirstName
+FROM (
+    SELECT contactFirstName, amount, customerNumber
+    FROM payments
+    INNER JOIN customers
+    USING (customerNumber)
+) AS findName -- 별칭 지정
+WHERE amount = (
+    SELECT MAX(amount)
+    FROM payments
+);
+```
+
+### EXISTS operator
+
+- 쿼리문에서 반환되 레코드 존재 여부 확인
+- subquery가 하나 이상의 행을 반환 하면 EXISTS 연산자는 TRUE 반환 그렇지 않으면 FALSE 반환
+- 주로 WHERE 절에서 subquery 반환 값 존재 여부 확인에 사용
+
+```sql
+SELECT customerNumber, customerName
+FROM customers
+WHERE
+    EXISTS(
+        SELECT *
+        FROM orders
+        WHERE customers.customerNumber = orders.customerNumber
+);
+```
+
+### CASE statement
+
+- SQL 문에서 조건문 구성
+
+```sql
+CASE case_value
+  WHEN when_value1 THEN statements
+  WHEN when_value2 THEN statements
+  ...
+  [ElSE else_statements]
+END CASE;
+```
+
+- case_value와 when_value1가 동일한 것을 찾을 때까지 순차적 비교 -> 찾으면 THEN 절 코드 실행
+- 동일 값 못찾으면 ELSE 절 코드 실행(ELSE절 없을때 동일 값 못 찾으면 오류 발생)
+
+```SQL
+SELECT contactFirstName, creditLimit,
+    CASE
+        WHEN creditLimit > 100000 THEN 'VIP'
+        WHEN creditLimit > 70000 THEN 'Platinum'
+        ELSE 'Bronze'
+    END AS grade
+FROM customers;
+```
+
+## 참고
+
+- 한 개의 글에 여러개의 댓글 가능, 댓글에 여러 개 게시글 가능
+
+  - 글 여러 개 : 유저 1, 댓글 여러 개 : 글 1
+  - N:1관계
+  - FK(외래키)는 N쪽에 성립한다
+
+- 일반적 정렬은 힘든 작업 따라서 서브쿼리 쓰는게 더 단순하게 이용 가능
+- SQL 사용법
+  - DATEDIFF('2023-03-01', '2023-03-28') / TIMESTAMPDIFF(DAY , '2023-03-01', '2023-03-28');
+  - HOUR(DATETIME)하면 시간만 꺼낼 수 있다
+  - DATE_FORMAT(DATETIME, '%Y-%m-%d')
+  - IFNULL( Column명, 'Null일 경우 대체 값')
