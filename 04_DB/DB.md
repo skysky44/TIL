@@ -245,3 +245,179 @@ HAVING
   GROUP BY
       YEAR(orderDate);
   ```
+
+# DB 4일차
+
+## Managing Tables
+
+- 데이터가 들어가는 테이블 구조에 대한 정의 변경
+- SQL Statements 유형
+  - DDL(Data Definition Language): 데이터의 기본 구조 및 형식 변경
+  - CREATE, DROP, ALTER
+- 하나의 필드에 여러가지 데이터 타입 안됨
+- 필드이름과 데이터 타입 간에 공백 구분
+- 숫자, 문자, 날짜 3가지 타입이 대표적
+- CHAR(50): 무조건 50자를 채움. 나머지를 공백으로 채움
+- VARCHAR(50): (가변길이) 들어온 길이만큼만 채움
+- TEXT: 길이 정하지 않는 타입
+
+### Create a table
+
+```sql
+CREATE TABLE examples (
+    examId INT AUTO_INCREMENT,
+    lastname VARCHAR(50) NOT NULL,
+    firstname VARCHAR(50) NOT NULL,
+    PRIMARY KEY (examId) -- primary key  편의상 최하단에 쓰는 것
+);
+-- 테이블 구조 확인
+SHOW COLUMNS FROM examples;
+```
+
+- 각 필드 데이터 타입 작성
+- 테이블 및 필드 제약조건(constraints) 작성
+  - NOT NULL: 해당 필드 NULL 저장 못하도록 지정
+  - PRIMARY KEY 해당 필드를 기본 키로 지정
+- 속성
+  - AUTO_INCREMENT
+    - 기본 키 필드에 사용(고유 숫자 부여)
+    - 시작 값 1, 값 생략시 자동 1씩 증가
+    - 이미 사용한 값 재사용하지 않음(1,2,3에서 2 지우고 새로 입력하면 4부터 입력)
+    - 기본적으로 NOT NULL 제약 조건 포함
+
+### Delete a table
+
+```sql
+DROP TABLE examples; -- (DELETE 아니고 DROP)
+```
+
+### Modifying table fields
+
+- ALTER TABLE: 하나로 (필드) 생성, 수정, 삭제 가능
+
+- ALTER TABLE ADD : 필드 추가
+- ALTER TABLE MODIFY : 필드 속성 변경
+- ALTER TABLE CHANGE COLUMN : 필드 이름 변경(change column은 modify 기능도 포함)
+- ALTER TABLE DROP COLUMN : 필드 삭제
+
+```sql
+ALTER TABLE examples
+ADD age INT NOT NULL,
+ADD address VARCHAR(100) NOT NULL;
+
+ALTER TABLE examples
+MODIFY address VARCHAR(50) NOT NULL;
+
+ALTER TABLE examples
+MODIFY lastname VARCHAR(10) NOT NULL,
+MODIFY firstname VARCHAR(10) NOT NULL;
+
+ALTER TABLE examples
+CHANGE COLUMN state2 state VARCHAR(100) NOT NULL;
+
+ALTER TABLE examples
+DROP COLUMN address;
+
+ALTER TABLE examples
+DROP COLUMN state,
+DROP COLUMN age;
+```
+
+## Modifying Data
+
+- SQL Statement 유형
+  - DML(Data Manipulation Language)
+  - 데이터 조작(추가, 수정, 삭제)
+  - INSERT, UPDATE, DELETE
+
+### Insert data into table
+
+- INSERT INTO
+  - INSERT INTO 절 다음에 테이블 이름과 괄호 안에 필드 목록 작성
+  - VALUES 키워드 다음 괄호 안에 삽입할 값 목록을 작성
+  - 싱크 맞아야 함(괄호안)
+
+```sql
+INSERT INTO
+    articles (title, content, createdAt)
+VALUES
+    ('hello', 'world', '2000-01-01');
+
+INSERT INTO
+    articles (title, content, createdAt)
+VALUES
+    ('title1','content1','1900-01-01'),
+    ('title2','content2','1800-01-01'),
+    ('title3','content3','1700-01-01');
+
+INSERT INTO
+    articles (title, content, createdAt)
+VALUES
+    ('mytitle', 'mycontent', CURDATE());
+```
+
+- UPDATE
+  - SET 절 다음에 수정할 필드와 새 값을 지정
+  - WHERE절 수정할 레코드를 지정하는 조건 작성
+
+```sql
+UPDATE
+    articles
+SET
+    title = 'newTitle'
+WHERE
+    id = 1;
+
+UPDATE
+    articles
+SET
+    title = 'newTitle2',
+    content = 'newContent2'
+WHERE
+    id = 2;
+
+UPDATE
+    articles
+SET
+    content = replace(content, 'content', 'TEST');
+
+SET SQL_SAFE_UPDATES = 0; -- 안전모드해제
+```
+
+- DELETE
+  - DELETE FROM 절 다음에 테이블 이름 작성
+  - WHERE 절에서 삭제할 레코드 지정(지정 안하면 모든 레코드 삭제)
+
+```sql
+DELETE FROM articles
+WHERE
+    id = 1;
+
+SELECT * FROM articles
+ORDER BY createdAt DESC;
+
+DELETE FROM articles
+ORDER BY createdAt DESC
+LIMIT 2;
+```
+
+## 참고
+
+- not null 사용 해야 할까?
+  - 별말 없으면 NOT null 그냥 써 둠
+  - 파이썬 등 다른 언어와 연동을 위해 0이나 빈문자열로 대체(null쓰면 타입을 또 바꿔야 해서)
+- 안전모드 해제
+  ```sql
+  set sql_safe_updates=0;
+  ```
+- 정리
+  - CREATE TABLE
+  - DROP TABLE
+  - ALTER TABLE
+    - ADD
+    - MODIFY
+    - CHANGE
+    - DROP
+  - INSERT INTO VALUES
+  - UPDATE SET
+  - DELETE FROM
