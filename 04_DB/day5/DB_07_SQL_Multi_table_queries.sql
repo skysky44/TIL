@@ -1,4 +1,3 @@
-
 -- 문제 1
 SHOW COLUMNS FROM employees;
 SHOW COLUMNS FROM offices;
@@ -98,7 +97,7 @@ SHOW COLUMNS FROM products;
 
 SELECT
     orderdetails.orderNumber , orderdetails.productCode , orderDate, productName
-FROM orderdetails
+FROM orderdetails 
 INNER JOIN orders
     ON orderdetails.orderNumber = orders.orderNumber
 INNER JOIN products
