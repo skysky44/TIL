@@ -34,10 +34,10 @@ WHERE country = (
     FROM customers
     GROUP BY country
     ORDER BY COUNT(*) DESC
-    LIMIT 1 -- subqery에서 IN/ALL/ANY/SOME이랑 LIMIT 동시 사용 불가
+    LIMIT 1 
 )
 ORDER BY customerNumber;
-
+-- subqery에서 IN/ALL/ANY/SOME이랑 LIMIT 동시 사용 불가
 
 -- 문제 5
 
