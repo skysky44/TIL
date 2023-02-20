@@ -572,3 +572,106 @@ FROM customers;
   - HOUR(DATETIME)하면 시간만 꺼낼 수 있다
   - DATE_FORMAT(DATETIME, '%Y-%m-%d')
   - IFNULL( Column명, 'Null일 경우 대체 값')
+
+# DB 7일차
+
+## Transactions
+
+- 여러 쿼리문을 묶어서 하나의 작업처럼 처리하는 방식(다성공 또는 다 실패)
+- ex. 계좌이체(인출&입금)
+- 쪼개질 수 없는 업무처리 단위
+- ALL or NOTHING
+
+```SQL
+START TRANSACTION; -- 시작을 알림
+state_ments;
+...
+[ROLLBACK|COMMIT] -- 정상적으로 완료되면 COMMIT 아니면 ROLLBACK
+```
+
+- 커밋이나 롤백 전 임시 데이터 영역에 머무름
+- 기본적으로 MySQL은 자동 변겨 사항 COMMIT 함
+
+```SQL
+SET autocommit = 0; -- 비활성화
+
+
+START TRANSACTION;
+
+INSERT INTO users (name)
+VALUES ('harry'), ('test');
+
+SELECT * FROM users;
+
+-- ROLLBACK;
+
+COMMIT;
+```
+
+## Triggers
+
+- 특정 이벤트(INSERT, UPDATE, DELETE)에 대한 응답으로 자동 실행되는 것(SELECT는 안됨)
+
+```SQL
+DELIMITER //
+CREATE TRIGGER trigger_name
+  {BEFORE|AFTER} {INSERT|UPDATE|DELETE}
+  ON table_name FOR EACH ROW
+BEGIN
+  trigger_body;
+END//
+DELIMITER ;
+```
+
+- 각 레코드의 어느 시점에 트리거가 실행될지 결정(삽입, 수정, 삭제 전/후): 커밋 (최종수정) 전이냐 후냐 생각
+- ON 키워드 뒤에 트리거가 속한 테이블의 이름을 지정
+- 트리거가 활성화될 때 실행할 코드를 trigger_body에 지정
+- 여러 명령문을 실행하려면 BEGIN END 키워드로 묶어서 사용
+- DELIMITER : 하나하나 완성된 구문은 ; 으로 종료해야되는데 임시로 종료표시를 바꿔줌
+
+```SQL
+DELIMITER // -- 여기서부터 종료 조건은 이제'//'
+CREATE TRIGGER myTrigger
+-- 언제?
+    BEFORE UPDATE
+    ON articles FOR EACH ROW
+BEGIN  -- 여러개 일 때
+    SET NEW.updatedAt = current_time(); -- 여기 때문에 ;를 // 로
+END//
+DELIMITER; -- 여기서부터 다시 ;로 복구
+```
+
+## 참고
+
+- 추가 명령문 참고
+
+```SQL
+-- 트리거 목록 확인
+SHOW TRIGGERS;
+
+-- 트리거 삭제
+DROP TRIGGER trigger_name;
+```
+
+- 트리거 생성 시 에러
+
+```SQL
+-- 실행중인 프로세스 목록 확인
+SELECT *FROM information_schema.INNODB_TRX;
+-- 특정 프로세스의 trx_mysql_thread_id 삭제
+KILL [trx_mysql_thread_id1];
+```
+
+- 워크벤치 왼쪽 파란점: 구문 표시
+- A-B : A에만 해당되고 B에는 속하지 않는 레코드(?)
+
+```SQL
+SELECT ANIMAL_ID, O.NAME
+FROM ANIMAL_INS AS I
+RIGHT JOIN ANIMAL_OUTS AS O
+    USING(ANIMAL_ID)
+WHERE
+    I.ANIMAL_ID IS NULL -- 여기 참고
+ORDER BY
+    ANIMAL_ID;
+```
