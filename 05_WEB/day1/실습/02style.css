@@ -1,0 +1,35 @@
+.make_red {
+  color: red;
+}
+.make_orange {
+  color: rgb(255, 102, 0);
+}
+.make_gray {
+  color: gray;
+}
+html {
+  font-size: 20px;
+}
+html {
+  background-color: lightskyblue;
+}
+body {
+  width: 600px;
+  margin: 0 auto;
+  background-color: white;
+  padding: 20px 20px 20px 20px;
+  border: 2px solid black;
+}
+h1 {
+  margin: 0;
+  padding: 20px 0;
+  color: #00539f;
+}
+h2 {
+  margin: 0;
+  padding: 5px 0;
+}
+img {
+  display: block;
+  margin: 0 auto;
+}
