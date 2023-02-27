@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <div class="container">
+      <img class="img" src="https://source.unsplash.com/random/?developer" />
+      <img class="img" src="https://source.unsplash.com/random/?algorithm" />
+      <img class="img" src="https://source.unsplash.com/random/?database" />
+      <img class="img" src="https://source.unsplash.com/random/?html" />
+      <img class="img" src="https://source.unsplash.com/random/?css" />
+    </div>
+
+    <!-- 이하 우측 하단 고정 버튼을 생성하기 위한 HTML 마크업 -->
+    <a href="#"><button class="button_style" type="button">버튼</button></a>
+  </body>
+  <style>
+    .container {
+      text-align: center;
+      display: inline;
+    }
+
+    .img {
+      margin: auto;
+      display: block;
+      width: 720px;
+      height: auto;
+    }
+
+    /* 이하 우측 하단 고정 버튼을 생성하기 위한 CSS 작성 */
+    * {
+      box-sizing: border-box;
+    }
+    .button_style {
+      position: fixed;
+      width: 80px;
+      height: 60px;
+      right: 20px;
+      bottom: 100px;
+      z-index: 1000;
+      font-size: 2em;
+    }
+  </style>
+</html>

@@ -1,0 +1,29 @@
+* {
+  box-sizing: border-box;
+}
+.card {
+  width: 600px;
+  border: 1px solid black;
+}
+.images {
+  position: relative;
+}
+.img1 {
+  width: 100%;
+}
+.img2 {
+  position: absolute;
+  right: 0;
+  width: 20%;
+}
+h1 {
+  margin: 20px 20px;
+}
+h3 {
+  margin: 20px 20px;
+}
+p {
+  width: 95%;
+  font-weight: bold;
+  margin: 20px;
+}
