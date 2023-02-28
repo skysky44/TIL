@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .container {
+        height: 500px;
+        border: 1px solid black;
+        display: flex;
+
+        /* 구성이 바뀜: 위에서 아래였는데 좌에서 우로(주축) */
+        /* 메인 방향이 어딘지 항상 생각 */
+        flex-direction: row;
+        /* flex-direction: column; */
+        /* 주축 방향 변경 */
+        /* flex-direction: row-reverse; */
+        /* flex-direction: column-reverse; */
+        /* 축 시작점 변경 */
+
+        /* flex-wrap: nowrap; */
+        /* (기본값)화면 줄여도 안에 라인 유지 (개행)*/
+        /* flex-wrap: wrap; */
+        /* 한 줄에 못들어가면 다음행으로 보냄 */
+
+        /* 주축정렬(여러행) */
+        /* justify-content: flex-start; */
+        /* justify-content: center; */
+        /* justify-content: flex-end; */
+
+        /* 교차축 정렬(여러행) */
+        /* align-content: flex-start; */
+        /* align-content: center; */
+        /* align-content: flex-end; */
+
+        /* 행이 하나일 때는 content 말고 items */
+        /* align-items: flex-start; */
+        /* align-items: center; */
+        /* align-items: flex-end; */
+
+        /* 여기 까지는 부모에 의해 자식들이 정렬됨 */
+      }
+      /* content 여러행, items 행1, self 요소1 */
+      .post {
+        background-color: grey;
+        border: 1px solid black;
+        margin: 0.5rem;
+        padding: 0.5rem;
+      }
+
+      .item1 {
+        /* 아이템 하나만 개별 이동하고 싶은 경우 */
+        align-self: center;
+      }
+
+      .item2 {
+        align-self: flex-end;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="post item1">
+        <h2>Post Title 1</h2>
+        <p>Post Content 1</p>
+      </div>
+      <div class="post item2">
+        <h2>Post Title 2</h2>
+        <p>Post Content 2</p>
+      </div>
+      <div class="post">
+        <h2>Post Title 3</h2>
+        <p>Post Content 3</p>
+      </div>
+      <div class="post">
+        <h2>Post Title 4</h2>
+        <p>Post Content 4</p>
+      </div>
+    </div>
+  </body>
+</html>

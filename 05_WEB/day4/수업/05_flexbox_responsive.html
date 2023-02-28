@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .card {
+        border: 1px solid black;
+        width: 80%;
+        display: flex;
+        flex-wrap: wrap;
+      }
+      img {
+        width: 100%;
+      }
+      .card-img {
+        flex-basis: 700px;
+        flex-grow: 1;
+        /* flex: 1 700px */
+        /* shortand */
+      }
+      .content {
+        border: 1px solid pink;
+        flex-basis: 350px;
+        flex-grow: 1;
+        /* flex: 1 350px */
+      }
+      /* flex-basis, flex-wrap, flex-grow 사용해서 반응형 가능  */
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <img class="card-img" src="images/sample.jpg" alt="fox" />
+      <div class="content">
+        <h2>Heading</h2>
+        <p>
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facere illum
+          error voluptate reprehenderit debitis dolore voluptates, incidunt
+          soluta, eum ab sunt est ratione modi laborum molestiae quaerat porro
+          nesciunt aspernatur?
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
