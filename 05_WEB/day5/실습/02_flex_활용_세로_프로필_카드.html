@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      .card {
+        width: 50%;
+        display: flex;
+        flex-wrap: wrap;
+        border: 1px solid black;
+      }
+      .card-image {
+        width: 100%;
+        position: relative;
+      }
+      .card-content {
+        width: 100%;
+        margin: 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        padding: 5px;
+      }
+      .card-image-img1 {
+        width: 100%;
+      }
+      .card-image-img2 {
+        position: absolute;
+        right: 0;
+        width: 20%;
+      }
+
+      .card-content-box {
+        width: 90%;
+        height: 90%;
+        margin: 5px;
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+        font-size: 1em;
+        flex-flow: 1;
+      }
+      .font-heading {
+        font-size: 1.5rem;
+      }
+      .font-subheading {
+        font-size: 1.2rem;
+      }
+      .font-contents {
+        font-size: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="card-image">
+        <img class="card-image-img1" src="images/01.jpg" alt="팀_버너스리" />
+        <img class="card-image-img2" src="images/02.png" alt="UK" />
+      </div>
+      <div class="card-content">
+        <div class="card-content-box">
+          <div class="font-heading">팀 버너스리</div>
+          <div class="font-subheading"><br />프로그래머</div>
+        </div>
+        <div class="card-content-box">
+          1989년 월드 와이드 웹의 하이퍼텍스트 시스템을 고안하여 개발. 웹의
+          아버지
+        </div>
+        <div class="card-content-box">
+          <div>국적</div>
+          <div>영국</div>
+        </div>
+        <div class="card-content-box">
+          <div>생년월일</div>
+          <div>1955년 6월 8일</div>
+        </div>
+        <div class="card-content-box">
+          <div>직업</div>
+          <div>전산과학자, 프로그래머, 교수</div>
+        </div>
+        <div class="card-content-box">
+          <div>출신 대학</div>
+          <div>옥스퍼드 대학교 물리학 석사</div>
+        </div>
+        <div class="card-content-box">
+          <div>추가 정보</div>
+          <div>
+            <a href="https://ko.wikipedia.org/wiki/팀_버너스리">
+              https://ko.wikipedia.org/wiki/팀_버너스리</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- <div>
+        <p>
+          1989년 월드 와이드 웹의 하이퍼텍스트 시스템을 고안하여 개발. 웹의
+          아버지
+        </p>
+        <p>국적 : 영국</p>
+        <p>생년월일 : 1955년 6월 8일</p>
+        <p>
+          추가 정보 :
+          
+          >
+        </p>
+      </div> -->
+    </div>
+  </body>
+</html>

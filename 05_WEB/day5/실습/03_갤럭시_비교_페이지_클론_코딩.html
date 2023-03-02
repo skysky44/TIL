@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      /* .line-red {
+        border: 1px solid red;
+      }
+       */
+      * {
+        box-sizing: border-box;
+      }
+
+      .page {
+        width: 100%;
+        display: flex;
+      }
+      
+      .nav {
+        position: fixed;
+        width: 100%;
+        height: 80px;
+        padding: 1em;
+        display: flex;
+        align-items: center;
+        border-bottom: 2px solid black;
+      }
+      
+      .logo {
+        width: 200px;
+        margin-right: auto;
+      }
+      
+      .logo_img {
+        width: 100%;
+      }
+      
+      .modelName {
+        width: 200px;
+        margin-left: auto;
+        font-size: 1.5em;
+        font-weight: bold;
+      }
+
+      .content {
+        width: 100%;
+        margin-top: 80px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+
+      .content-modelBox {
+        width: 33%;
+        height: 500px;
+        padding: 10%;
+        flex-grow: 1;
+        flex-basis: 300px;
+        margin: auto;
+        text-align: center ;
+      }
+      .box {
+        margin: 0.5em;
+        font-weight: bold;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="nav">
+        <div class="logo" ><img class="logo_img" src="images/04.png" alt="hypergrowth"></div>
+        <div class="modelName">Hyper S23</div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="content-modelBox" >
+          <div class="box">하이퍼 S23 Super</div>
+          <img src="images/03.png" alt="">
+          <div class="box">몰입형 게임 최적화</div>
+          <div class="box">화면크기<br>173.1 mm</div>
+          <div class="box">3,088 x 1,440 <br> (Quad HD+ 엣지 디스플레이)</div>
+          <div class="box">최대 밝기<br> 1,1750 니트</div>
+          <div class="box">가변주사율<br> 1~120 Hz</div>
+        </div>
+        <div class="content-modelBox" >
+          <div class="box">하이퍼 S23+</div>
+          <img src="images/03.png" alt="">
+          <div class="box">야외에서도 뛰어난 선명도</div>
+          <div class="box">화면크기<br>173.1 mm</div>
+          <div class="box">3,088 x 1,440 <br> (Quad HD+ 엣지 디스플레이)</div>
+          <div class="box">최대 밝기<br> 1,1750 니트</div>
+          <div class="box">가변주사율<br> 1~120 Hz</div>
+        </div>
+        <div class="content-modelBox" >
+          <div class="box">하이퍼 S23</div>
+          <img src="images/03.png" alt="">
+          <div class="box">야외에서도 뛰어난 선명도</div>
+          <div class="box">화면크기<br>173.1 mm</div>
+          <div class="box">3,088 x 1,440 <br> (Quad HD+ 엣지 디스플레이)</div>
+          <div class="box">최대 밝기<br> 1,1750 니트</div>
+          <div class="box">가변주사율<br> 1~120 Hz</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
