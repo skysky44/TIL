@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spotify-웹 플레이어</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      .line {
+        border: 1px solid black;
+      }
+      .container {
+        height: 1500px;
+        display: flex;
+        flex-direction: column;
+        margin-left: 350px;
+        margin-top: 100px;
+
+        /* position: relative; */
+      }
+      .box {
+        display: flex;
+      }
+      .navbar {
+        display: flex;
+        height: 100px;
+        position: fixed;
+        justify-content: space-between;
+        top: 0;
+        left: 350px;
+        right: 0;
+        background-color: black;
+      }
+      /* .sidebar-logo {
+        display: flex;
+      } */
+      /* .navbar-loginbar {
+        display: flex;
+        flex-grow: 1;
+      } */
+      .navbar-buttons {
+        width: 200px;
+        display: flex;
+        flex-grow: 1;
+      }
+      .left-button {
+        color: white;
+      }
+      .right-button {
+        color: white;
+      }
+      .navbar-logins {
+        width: 200px;
+        display: flex;
+      }
+      .signup {
+        width: 50%;
+        color: white;
+      }
+      .login {
+        width: 50%;
+        color: white;
+      }
+      .nav-content {
+        display: flex;
+        flex-direction: column;
+      }
+      .main {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 350px;
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        background-color: black;
+      }
+
+      .sidebar-menu {
+        display: flex;
+        flex-direction: column;
+        margin-left: 2rem;
+      }
+      .mini-menu {
+        margin-bottom: 2rem;
+        color: white;
+      }
+      .sidebar-language {
+        display: flex;
+        margin-left: 2rem;
+        margin-top: 6rem;
+      }
+      .content {
+        display: flex;
+        flex-wrap: wrap;
+        height: 1400px;
+        margin: 0;
+        background-color: gray;
+      }
+
+      .content-box {
+        position: static;
+        border: 1px solid black;
+        width: 250px;
+        height: 350px;
+        margin-top: 30px;
+        margin-left: 30px;
+        background-color: black;
+        color: white;
+        text-align: center;
+        font-size: 1rem;
+      }
+
+      .footer {
+        position: fixed;
+        height: 100px;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        background: linear-gradient(to right, pink, lightblue);
+        text-align: center;
+        padding: 20px;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      img {
+        width: 90%;
+        height: 70%;
+        margin-top: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container line">
+      <div class="box">
+        <div class="sidebar line">
+          <div class="sidebar-logo line">
+            <img src="imges/spotify/logo.png" alt="logo" />
+          </div>
+          <div class="sidebar-menu">
+            <div class="mini-menu">홈</div>
+            <div class="mini-menu">검색하기</div>
+            <div class="mini-menu">내 라이브러리</div>
+            <div class="mini-menu">플레이리스트 만들기</div>
+            <div class="mini-menu">좋아요 표시한 곡</div>
+          </div>
+          <div class="sidebar-language mini-menu line">한국어</div>
+        </div>
+        <div class="main line">
+          <div class="navbar line">
+            <!-- <div class="navbar-loginbar line"> -->
+            <div class="navbar-buttons line">
+              <div class="left-button line">left</div>
+              <div class="right-button line">right</div>
+            </div>
+            <div class="navbar-logins line">
+              <div class="signup line">signup</div>
+              <div class="login line">login</div>
+            </div>
+            <!-- </div> -->
+          </div>
+          <div class="content line">
+            <div class="content-box">
+              <img src="/imges/alb/2798709.jpg" alt="" />
+              <p>Circular</p>
+              <p>2019 앨범</p>
+            </div>
+            <div class="content-box">
+              <img src="/imges/alb/410380.jpg" alt="" />
+              <p>UNVEILING</p>
+              <p>2014 앨범</p>
+            </div>
+            <div class="content-box">
+              <img src="/imges/alb/4497010.jpg" alt="" />
+              <p>CEREMONIA</p>
+              <p>2020 싱글</p>
+            </div>
+            <div class="content-box">
+              <img src="/imges/alb/614753.jpg" alt="" />
+              <p>pathos</p>
+              <p>2016 앨범</p>
+            </div>
+            <div class="content-box">
+              <img src="/imges/alb/764269.jpg" alt="" />
+              <p>Pathos Tour Live Album</p>
+              <p>2016 앨범</p>
+            </div>
+            <div class="content-box">
+              <img src="/imges/alb/mc.jpg" alt="" />
+              <p>M.C The Max! Vol.1</p>
+              <p>2008 앨범</p>
+            </div>
+            <div class="content-box">
+              <img src="imges/alb/ta.jpg" alt="" />
+              <p>태양의 후예 Pt.9</p>
+              <p>2016 싱글</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer line">24조 안정환 정세호</div>
+    </div>
+  </body>
+</html>
