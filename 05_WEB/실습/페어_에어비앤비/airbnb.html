@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Airbnb</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+<body>
+  <div class="container">
+  <!-- 네비게이션 바 -->
+    <div class="d-flex nav justify-content-between m-md-4">
+      <div class="w-25">
+        <img class="w-50" src="images/Airbnb_Logo_Bélo.svg.png" alt="">
+      </div>
+        <div class="ms-auto row justify-content-end" style="width: 200px;">  
+          <div class="col-6 py-lg-3 text-center">회원가입</div>
+          <div class="col-5 py-lg-3 text-center">로그인</div>
+      </div>
+    </div>
+<!-- 로그인블록 -->
+    <div class="mt-5" style="width: 400px;">
+      <h4 class="fw-bold">한국의 휴가 임대 시설</h4>
+      <p class="text-muted">에어비앤비에서 독특한 숙소를 예약하세요.</p>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control text-dark" placeholder="위치">
+        
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="체크인">        
+        <input type="text" class="form-control" placeholder="체크아웃">
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="성인">
+        <input type="text" class="form-control" placeholder="어린이">
+      </div>
+      <div class="d-grid">
+        <button class="btn btn-danger ">검색</button>
+      </div>
+    </div>
+    <!-- 1열 3칸 추천 -->
+    <div class="mt-5">
+      <h3>최고 평점을 받은 한국의 휴가 숙소</h3>
+      <h5>위치, 청결도 등에서 게스트의 높은 평가를 받은 숙소입니다.</h5>
+      <div class="row row-cols-1 row-cols-lg-3 mt-lg-3">
+        <div class="col">
+          <div class="text-center">
+            <img class="rounded-2 img-fluid" src="images/01.webp" alt="">
+          </div>
+          <div class="my-2">
+            <div class="row">
+              <div class="col-8 text-truncate"><strong>PETIT REST</strong></div>
+              <div class="col-4 text-end">
+                ★ 5.45 </div>
+            </div>
+            <div class="text-truncate">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque libero lectus, eleifend vel risus sed, auctor lobortis dolor. Cras rhoncus magna commodo mi consectetur aliquet. Pellentesque habitant morbi tristique</div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="position-relative">
+            <button class="mt-2 ms-2 position-absolute start-0 top-0">슈퍼호스트</button>
+            <img class="rounded-2 img-fluid" src="images/02.webp" alt="">
+          </div>
+          <div class="my-2">
+            <div class="row">
+              <div class="col-8 text-truncate"><strong> spa#2 _Analog_Hanok_북촌</strong></div>
+              <div class="col-4 text-end">★ 4.95</div>
+            </div>
+            <div class="text-truncate">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime architecto cumque incidunt animi deleniti cum inventore cupiditate reprehenderit dolores, aut modi libero a. Harum officia tempora ducimus quae. Amet, officiis.</div>
+          </div>
+        </div><div class="col">
+          <div>
+            <img class="rounded-2 img-fluid" src="images/03.webp" alt="">
+          </div>
+          <div class="my-2">
+            <div class="row">
+              <div class="col-8 text-truncate"><strong>전주 감성한옥 '라누이-블랑슈'</strong></div>
+              <div class="col-4 text-end">★  4.95</div>
+            </div>
+            <div class="text-truncate">Cras rhoncus magna commodo mi consectetur aliquet. Pellentesque habitant morbi tristique</div>
+          </div>
+        </div>
+    </div>
+    <div class="mt-5">
+      <h3>한국의 휴가용 임대 숙소의 인기 편의시설</h3>
+      <div class="d-flex flex-sm-wrap">
+        <div class="border shadow rounded-2 p-3 m-1" style="width: 200px;">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display: block; height: 30px; width: 30px; fill: #222;" aria-hidden="true" role="presentation" focusable="false"><path d="M26 1a5 5 0 0 1 5 5c0 6.389-1.592 13.187-4 14.693V31h-2V20.694c-2.364-1.478-3.942-8.062-3.998-14.349L21 6l.005-.217A5 5 0 0 1 26 1zm-9 0v18.118c2.317.557 4 3.01 4 5.882 0 3.27-2.183 6-5 6s-5-2.73-5-6c0-2.872 1.683-5.326 4-5.882V1zM2 1h1c4.47 0 6.934 6.365 6.999 18.505L10 21H3.999L4 31H2zm14 20c-1.602 0-3 1.748-3 4s1.398 4 3 4 3-1.748 3-4-1.398-4-3-4zM4 3.239V19h3.995l-.017-.964-.027-.949C7.673 9.157 6.235 4.623 4.224 3.364l-.12-.07zm19.005 2.585L23 6l.002.31c.045 4.321 1.031 9.133 1.999 11.39V3.17a3.002 3.002 0 0 0-1.996 2.654zm3.996-2.653v14.526C27.99 15.387 29 10.4 29 6a3.001 3.001 0 0 0-2-2.829z"></path></svg> 주방</div>
+        <div class="border shadow rounded-2 p-3 m-1" style="width: 200px;">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display: block; height: 30px; width: 30px; fill: #222;" aria-hidden="true" role="presentation" focusable="false"><path d="m15.9999 20.33323c2.0250459 0 3.66667 1.6416241 3.66667 3.66667s-1.6416241 3.66667-3.66667 3.66667-3.66667-1.6416241-3.66667-3.66667 1.6416241-3.66667 3.66667-3.66667zm0 2c-.9204764 0-1.66667.7461936-1.66667 1.66667s.7461936 1.66667 1.66667 1.66667 1.66667-.7461936 1.66667-1.66667-.7461936-1.66667-1.66667-1.66667zm.0001-7.33323c3.5168171 0 6.5625093 2.0171251 8.0432368 4.9575354l-1.5143264 1.5127043c-1.0142061-2.615688-3.5549814-4.4702397-6.5289104-4.4702397s-5.5147043 1.8545517-6.52891042 4.4702397l-1.51382132-1.5137072c1.48091492-2.939866 4.52631444-4.9565325 8.04273174-4.9565325zm.0001-5.3332c4.9804693 0 9.3676401 2.540213 11.9365919 6.3957185l-1.4470949 1.4473863c-2.1746764-3.5072732-6.0593053-5.8431048-10.489497-5.8431048s-8.31482064 2.3358316-10.48949703 5.8431048l-1.44709488-1.4473863c2.56895177-3.8555055 6.95612261-6.3957185 11.93659191-6.3957185zm-.0002-5.3336c6.4510616 0 12.1766693 3.10603731 15.7629187 7.9042075l-1.4304978 1.4309874c-3.2086497-4.44342277-8.4328305-7.3351949-14.3324209-7.3351949-5.8991465 0-11.12298511 2.89133703-14.33169668 7.334192l-1.43047422-1.4309849c3.58629751-4.79760153 9.31155768-7.9032071 15.7621709-7.9032071z"></path></svg>무선인터넷</div>
+        <div class="border shadow rounded-2 p-3 m-1" style="width: 200px;">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display: block; height: 30px; width: 30px; fill: #222;" aria-hidden="true" role="presentation" focusable="false"><path d="M24 26c.988 0 1.945.351 2.671 1.009.306.276.71.445 1.142.483L28 27.5v2l-.228-.006a3.96 3.96 0 0 1-2.443-1.003A1.978 1.978 0 0 0 24 28c-.502 0-.978.175-1.328.491a3.977 3.977 0 0 1-2.67 1.009 3.977 3.977 0 0 1-2.672-1.009A1.978 1.978 0 0 0 16 28c-.503 0-.98.175-1.329.491a3.978 3.978 0 0 1-2.67 1.009 3.978 3.978 0 0 1-2.672-1.008A1.978 1.978 0 0 0 8 28c-.503 0-.98.175-1.33.491a3.96 3.96 0 0 1-2.442 1.003L4 29.5v-2l.187-.008a1.953 1.953 0 0 0 1.142-.483A3.975 3.975 0 0 1 8 26c.988 0 1.945.352 2.671 1.009.35.316.826.49 1.33.491.502 0 .979-.175 1.328-.492A3.974 3.974 0 0 1 16 26c.988 0 1.945.351 2.671 1.009.35.316.826.49 1.33.491.502 0 .979-.175 1.328-.491A3.975 3.975 0 0 1 23.999 26zm0-5c.988 0 1.945.351 2.671 1.009.306.276.71.445 1.142.483L28 22.5v2l-.228-.006a3.96 3.96 0 0 1-2.443-1.003A1.978 1.978 0 0 0 24 23c-.502 0-.978.175-1.328.491a3.977 3.977 0 0 1-2.67 1.009 3.977 3.977 0 0 1-2.672-1.009A1.978 1.978 0 0 0 16 23c-.503 0-.98.175-1.329.491a3.978 3.978 0 0 1-2.67 1.009 3.978 3.978 0 0 1-2.672-1.008A1.978 1.978 0 0 0 8 23c-.503 0-.98.175-1.33.491a3.96 3.96 0 0 1-2.442 1.003L4 24.5v-2l.187-.008a1.953 1.953 0 0 0 1.142-.483A3.975 3.975 0 0 1 8 21c.988 0 1.945.352 2.671 1.009.35.316.826.49 1.33.491.502 0 .979-.175 1.328-.492A3.974 3.974 0 0 1 16 21c.988 0 1.945.351 2.671 1.009.35.316.826.49 1.33.491.502 0 .979-.175 1.328-.491A3.975 3.975 0 0 1 23.999 21zM20 3a4 4 0 0 1 3.995 3.8L24 7v2h4v2h-4v5c.912 0 1.798.3 2.5.862l.171.147c.306.276.71.445 1.142.483L28 17.5v2l-.228-.006a3.96 3.96 0 0 1-2.443-1.003A1.978 1.978 0 0 0 24 18c-.502 0-.978.175-1.328.491a3.977 3.977 0 0 1-2.67 1.009 3.977 3.977 0 0 1-2.672-1.009A1.978 1.978 0 0 0 16 18c-.503 0-.98.175-1.329.491a3.978 3.978 0 0 1-2.67 1.009 3.978 3.978 0 0 1-2.672-1.008A1.978 1.978 0 0 0 8 18c-.503 0-.98.175-1.33.491a3.96 3.96 0 0 1-2.442 1.003L4 19.5v-2l.187-.008a1.953 1.953 0 0 0 1.142-.483A3.975 3.975 0 0 1 8 16c.988 0 1.945.352 2.671 1.009.35.316.826.49 1.33.491.502 0 .979-.175 1.328-.492a3.956 3.956 0 0 1 2.444-1.002L16 16v-5H4V9h12V7a2 2 0 0 0-3.995-.15L12 7h-2a4 4 0 0 1 7-2.645A3.985 3.985 0 0 1 20 3zm-2 13.523c.16.091.313.194.459.307l.212.179c.35.316.826.49 1.33.491.439 0 .86-.134 1.191-.38l.137-.111c.206-.187.431-.35.67-.486V11h-4zM20 5a2 2 0 0 0-1.995 1.85L18 7v2h4V7a2 2 0 0 0-2-2z"></path></svg>수영장</div>        
+        <div class="border shadow rounded-2 p-3 m-1" style="width: 200px;">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display: block; height: 30px; width: 30px; fill: #222;" aria-hidden="true" role="presentation" focusable="false"><path d="M16 1c8.284 0 15 6.716 15 15 0 8.284-6.716 15-15 15-8.284 0-15-6.716-15-15C1 7.716 7.716 1 16 1zm0 2C8.82 3 3 8.82 3 16s5.82 13 13 13 13-5.82 13-13S23.18 3 16 3zm2 5a5 5 0 0 1 .217 9.995L18 18h-5v6h-2V8zm0 2h-5v6h5a3 3 0 0 0 .176-5.995z"></path></svg>건물 내 무료 주차</div>
+          <div class="border shadow rounded-2 p-3 m-1" style="width: 200px;">
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display: block; height: 30px; width: 30px; fill: #222;" aria-hidden="true" role="presentation" focusable="false"><path d="M17 1v4.03l4.026-2.324 1 1.732L17 7.339v6.928l6-3.464V5h2v4.648l3.49-2.014 1 1.732L26 11.381l4.026 2.325-1 1.732L24 12.535l-6 3.464 6 3.465 5.026-2.902 1 1.732L26 20.618l3.49 2.016-1 1.732L25 22.351V27h-2v-5.804l-6-3.465v6.929l5.026 2.902-1 1.732L17 26.97V31h-2v-4.031l-4.026 2.325-1-1.732L15 24.66v-6.929l-6 3.464V27H7v-4.65l-3.49 2.016-1-1.732 3.489-2.016-4.025-2.324 1-1.732 5.025 2.901 6-3.464-6-3.464-5.025 2.903-1-1.732L6 11.38 2.51 9.366l1-1.732L7 9.648V5h2v5.803l6 3.464V7.339L9.974 4.438l1-1.732L15 5.03V1z"></path></svg>에어컨</div>
+
+      </div>
+    </div>
+    <div class="mt-5">
+      <h3>한국의 다른 근사한 휴가 숙소</h3>
+      <classclass class="row row-cols-1 row-cols-lg-4 mt-lg-3">
+        <div class="col">
+          <div class="position-relative">
+            <button class="mt-2 ms-2 position-absolute start-0 top-0">슈퍼호스트</button>
+            <img class="rounded-2 img-fluid" src="images/04.webp" alt="">
+          </div>
+          <div class="my-2">
+            <div class="row">
+              <div class="col-8 text-truncate"><strong>'소담소담' 한옥 민박 힐링 스팟</strong></div>
+              <div class="col-4 text-end">★  4.95</div>
+            </div>
+            <div class="text-truncate">Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Praesent eu tempus turpis. Nullam vitae tortor id magna maximus venenatis. Suspendisse accumsan sapien non lectus sagittis, vitae faucibus sapien iaculis.</div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="position-relative">
+            <button class="mt-2 ms-2 position-absolute start-0 top-0">슈퍼호스트</button>
+            <img class="rounded-2 img-fluid" src="images/05.webp" alt="">
+          </div>
+          <div class="my-2">
+            <div class="row">
+              <div class="col-8 text-truncate"><strong>옛 정취를 물씬 느낄 수 있는 명품 고택! '목임당'</strong></div>
+              <div class="col-4 text-end">★  4.95</div>
+            </div>
+            <div class="text-truncate">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam sunt rerum explicabo ab. Tempora ipsam quam dolores. Dolore temporibus repellat impedit? Beatae dolore a nulla tempore doloribus debitis, esse consequuntur?</div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="position-relative text-center">
+            <button class="mt-2 ms-2 position-absolute start-0 top-0">슈퍼호스트</button>
+            <img class="rounded-2 img-fluid" style="height: 200p"src="images/06.webp" alt="">
+          </div>
+          <div class="my-2">
+            <div class="row">
+              <div class="col-8 text-truncate"><strong>해[海]요일/바다 보는 날/바다위에 누워 휴식/휴식이 필요한 날</strong></div>
+              <div class="col-4 text-end">★  4.95</div>
+            </div>
+            <div class="text-truncate">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga omnis quae quasi aut amet iure itaque! Modi et ab ratione cupiditate sit! Dolores ipsum aliquid a ex consequuntur ducimus laboriosam?</div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="position-relative">
+            <button class="mt-2 ms-2 position-absolute start-0 top-0">슈퍼호스트</button>
+            <img class="rounded-2 img-fluid" src="images/07.webp" alt="">
+          </div>
+          <div class="my-2">
+            <div class="row">
+              <div class="col-8 text-truncate"><strong>안국역 도보 10분 독채 한옥 스테이</strong></div>
+              <div class="col-4 text-end">★  4.95</div>
+            </div>
+            <div class="text-truncate">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate harum ex voluptates adipisci odit aliquam odio suscipit cumque, enim, sapiente doloremque debitis quos voluptas error possimus explicabo fuga quaerat asperiores!</div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="position-relative">
+            <button class="mt-2 ms-2 position-absolute start-0 top-0">슈퍼호스트</button>
+            <img class="rounded-2 img-fluid" src="images/08.webp" alt="">
+          </div>
+          <div class="my-2">
+            <div class="row">
+              <div class="col-8 text-truncate"><strong>토향고택 - 용호정 (신축독채)</strong></div>
+              <div class="col-4 text-end">★  4.95</div>
+            </div>
+            <div class="text-truncate">Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium aut ad ipsum ullam sed non sint, ea nulla sunt, rem alias, inventore odit ducimus at possimus repudiandae. Sed, debitis earum.</div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="position-relative">
+            <button class="mt-2 ms-2 position-absolute start-0 top-0">슈퍼호스트</button>
+            <img class="rounded-2 img-fluid" src="images/09.webp" alt="">
+          </div>
+          <div class="my-2">
+            <div class="row">
+              <div class="col-8 text-truncate"><strong>한옥 빌리지</strong></div>
+              <div class="col-4 text-end">★  4.95</div>
+            </div>
+            <div class="text-truncate">Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia perferendis error perspiciatis soluta asperiores, quaerat provident nobis, totam saepe esse laboriosam id ea ipsa officiis quam dolores eum corrupti deserunt.</div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="position-relative">
+            <button class="mt-2 ms-2 position-absolute start-0 top-0">슈퍼호스트</button>
+            <img class="rounded-2 img-fluid" src="images/10.webp" alt="">
+          </div>
+          <div class="my-2">
+            <div class="row">
+              <div class="col-8 text-truncate"><strong>제주시의 게스트 스위트</strong></div>
+              <div class="col-4 text-end">★  4.95</div>
+            </div>
+            <div class="text-truncate">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius, rerum. Minima soluta ad voluptatem unde. Nisi fuga excepturi maxime facilis in, placeat vitae minus illum, aperiam doloremque optio, libero dolorem?</div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="position-relative">
+            <button class="mt-2 ms-2 position-absolute start-0 top-0">슈퍼호스트</button>
+            <img class="rounded-2 img-fluid" src="images/11.webp" alt="">
+          </div>
+          <div class="my-2">
+            <div class="row">
+              <div class="col-8 text-truncate"><strong>별이 보이는 감성충만 프라이빗 복층 Cosmos Room</strong></div>
+              <div class="col-4 text-end">★  4.95</div>
+            </div>
+            <div class="text-truncate">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt corrupti blanditiis autem nisi ad at modi quisquam? Facere culpa illo saepe, iste ipsa doloribus vitae mollitia odio nisi. Reprehenderit, facere!</div>
+          </div>
+        </div>
+    </div>
+
+    </div>
+  </div>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+    crossorigin="anonymous"></script>
+</body>
+</html>
