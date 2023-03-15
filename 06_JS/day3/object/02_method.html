@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const person = {
+      name: 'Sophia',
+      greeting: function () {
+        return `hello, ${this.name}`
+      },
+    }
+    //this가 object.method()의 object의미(여기서는 person)
+    // this 본인을 호출하는 객체
+
+    // greeting 메서드 호출
+    console.log(person.greeting())
+
+    // this
+    // 단순 호출 시(this는 window를 가리킴)
+    const myFunc = function () {
+      return this
+    }
+    
+    console.log(myFunc())
+    //Window
+
+    //nested(중첩) 함수에서의 this
+
+    
+
+
+  </script>
+</body>
+</html>

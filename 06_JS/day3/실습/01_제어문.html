@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript Basics</title>
+</head>
+
+<body>
+
+</body>
+
+<script>
+  /*
+  1. 0 2 4 6 8 을 값으로 가진 배열 생성 및 출력 
+  */
+  const array = [0, 2, 4, 6, 8]
+  console.log(array)
+
+  /*
+  2. 아래 반복문 코드와 동일한 결과의 반복문 코드를 map 메서드를 활용해서 작성
+  let array = [0, 2, 4, 6, 8]
+  for (let i = 0; i < array.length; i++) {
+    let result = array[i] * 2
+    console.log(result)
+  }
+  */
+
+
+  const double = array.map(function (number) {
+    console.log(number * 2)
+  })
+
+  
+  /*
+  3. 아래 반복문 코드와 동일한 결과의 반복문 코드를 forEach 메서드를 활용해서 작성
+  let array = [0, 2, 4, 6, 8]
+  for (let i = 0; i < array.length; i++) {
+    let result = array[i] * 2
+    console.log(result)
+  }
+   */
+
+  array.forEach(function (number) {
+    console.log(number * 2)
+  })
+
+  /*
+  4. 아래 반복문 코드와 동일한 결과의 반복문 코드를 map 메서드를 활용해서 작성
+  let array = [0, 2, 4, 6, 8]
+  let newArray = []
+  for (let i = 0; i < array.length; i++) {
+    let result = array[i] * 3
+    newArray.push(result)
+  }
+  console.log(newArray)
+  */
+
+  const newArray = []
+  const triple = array.map((number) => {
+    const newNumber = number * 3
+    newArray.push(newNumber)
+  })
+  console.log(newArray)
+
+
+  /*
+  5. 아래 반복문 코드와 동일한 결과의 반복문 코드를 forEach 메서드를 활용해서 작성
+  let array = [0, 2, 4, 6, 8]
+  let newArray = []
+  for (let i = 0; i < array.length; i++) {
+    let result = array[i] * 3
+    newArray.push(result)
+  }
+  console.log(newArray)
+  */
+
+  newArray2 = []
+  array.forEach((number) => {
+    newArray2.push(number * 3)
+  })
+  console.log(newArray2)
+
+  /*
+  6. 아래 배열 변수가 주어졌을 때 홀수인 원소만 출력하는 반복문을 map 메서드를 활용해서 작성
+  // 아래 배열 활용
+  let array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  */
+
+  let array3 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  const odd = array3.map((number) => {
+    if (number % 2 != 0) {
+      console.log(number)
+    }
+  })
+
+  /*
+  7. 아래 배열 변수가 주어졌을 때 짝수인 원소만 출력하는 반복문을 forEach 메서드를 활용해서 작성
+  // 아래 배열 활용
+  let array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  */
+
+  let array4 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  array4.forEach((number) => {
+    if (number % 2 === 0) {
+      console.log(number)
+    }
+  })
+</script>
+
+</html>

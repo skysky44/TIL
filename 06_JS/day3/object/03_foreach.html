@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const fruits = ['apple', 'banana', 'coconut']
+
+    // forEach(반복문)
+    fruits.forEach(function (fruit, idx) {
+      console.log(fruit, idx)
+    })
+
+    fruits.forEach((fruit, idx) => {
+      console.log(fruit, idx)
+    })
+
+    // map
+    const numbers = [1, 2, 3]
+
+    const doubleNumbers = numbers.map(function (number) {
+      return number * 2
+    })
+
+    const doubleNumbers2 = numbers.map((number) => {
+      return number * 2
+    })
+
+    console.log(doubleNumbers)
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 화살표 함수
+    const greeting = function (name) {
+      return `hello, ${name}`
+    }
+
+    //아래 1단계 반드시 알아야함 
+
+    const arrow1 = (name) => {
+      return `hello, ${name}`
+    }
+
+    console.log(arrow1('harry'))
+
+    const arrow2 = (name) => `hello, ${name}`
+
+    console.log(arrow2('harry'))
+
+    // 매개 변수 하나면 소괄소도 없어지는데 권장은 안함
+  </script>
+</body>
+</html>
