@@ -44,7 +44,7 @@
   const feedback = document.querySelector('#feedbackPassword')
   inputPw.addEventListener('input', (event) => {
 
-    if (inputPw.value.length >= 8 & inputPw.value.length <= 16) {
+    if (inputPw.value.length >= 8 && inputPw.value.length <= 16) {
       feedback.textContent = '유효한 비밀번호입니다.'
     } else {
       feedback.textContent = '유효하지 않은 비밀번호입니다.'
