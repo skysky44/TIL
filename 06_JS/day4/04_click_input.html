@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .blue {
+      color: lightblue;
+    }
+
+  </style>
+</head>
+
+<body>
+  <h1></h1>
+  <button id="btn">클릭</button>
+  <input type="text" id="text-input">
+
+  <script>
+    // 1. input, h1 요소 선택
+    const inputTag = document.querySelector('#text-input')
+    const h1Tag = document.querySelector('h1')
+
+    // 2. 이벤트 핸들러 추가
+    inputTag.addEventListener('input', (event) => {
+      // 2.1. value 가져오기
+      const text = event.target.value
+      // 2.2. h1태그 텍스트 바꾸기
+      h1Tag.textContent = text
+    })
+    
+    // 3. 버튼 요소 선택
+    const btn = document.querySelector('#btn')
+    // 4. 버튼에 이벤트 핸들러 추가
+    btn.addEventListener('click', (event) => {
+      // 4.1. 스타일 변경하기
+      // h1Tag.classList.add('blue')
+        // 1. toggle 방법
+      h1Tag.classList.toggle('blue')
+        // 2. if로 add, remove 방법
+    })
+
+  </script>
+
+</body>
+
+</html>
