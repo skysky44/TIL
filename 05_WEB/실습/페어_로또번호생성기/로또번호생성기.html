@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" 
+  rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" 
+  crossorigin="anonymous">
+  <title>로또 번호 생성기</title>
+  <style>
+    body {
+      padding: 3rem;
+    }
+    div {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+    }
+    
+    ul {
+      justify-content: space-around;
+      display: flex;
+      justify-items: center;
+    }
+    li {
+      width: 5rem;
+      height: 5rem;
+      text-align: center;
+      vertical-align: middle;
+      justify-content: space-around;
+      justify-items: center;
+      margin: 0 auto;
+      display: flex;
+    }
+    p {
+      line-height: 5rem;
+      font-weight: bold;
+      font-size: 1.5rem;
+      
+    }
+  </style>
+</head>
+<body>
+
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+
+  <!-- //생성 버튼을 클릭하면 랜덤으로 로또 번호 생성 및 출력
+  //로또 번호 규칙 : 1부터 45 사이 숫자 중 중복없이 6개의 숫자
+  //lodash 라이브러리를 사용하기 위해 CDN 링크를 포함해야 합니다.  -->
+  <script>
+    
+    
+    const bodyT = document.querySelector('body')
+    const divTag = document.createElement('div')
+    divTag.classList.add('list-unstyled')
+    const btnTag = document.createElement('button')
+    btnTag.classList.add('btn', 'btn-primary')
+    btnTag.textContent ='생성'
+    divTag.appendChild(btnTag)
+    bodyT.appendChild(divTag)
+    btnTag.setAttribute('id', 'btn')
+    const eventBtn = document.getElementById('btn')
+    const arr = _.range(1, 46, 1)
+    const divTag2 = document.createElement('div')
+    const labelT = document.createElement('label')
+    const inputT = document.createElement('input')
+    labelT.textContent = "당첨번호를 입력하세요. 각 번호는 공백으로 구분되어야 합니다."
+    labelT.setAttribute('for', 'inputNumbers')
+    inputT.setAttribute('id', 'inputNumbers')
+    inputT.setAttribute('type', 'text')
+    divTag2.append(labelT, inputT)
+    divTag2.setAttribute('name', 'test4')
+    bodyT.append(divTag2)
+    inputT.setAttribute('value', '') 
+    inputT.setAttribute('id', 'test3')
+    let winningNumbers = [11, 23, 25, 30, 32, 40]
+    let bonusNumbers = [42]
+    inputT.addEventListener('input', function(event) {
+      inputT.setAttribute('value', event.target.value)
+    })
+    const test = document.createElement('button')
+    divTag2.appendChild(test)
+    test.setAttribute('onclick', 'test1()')
+    test.textContent = '입력'
+    function test1() {
+      winningNumbers = document.getElementById('test3').value.split(" ").map(Number)
+      console.log(winningNumbers)
+    }
+    
+    const eventInput = document.getElementById('inputNumbers')
+    
+
+    eventBtn.addEventListener('click', function(event) {
+      while (true) {
+        let lotto = _.sampleSize(arr, 6)
+      let sortedNumbers = lotto.sort((a, b) => a - b)
+      const ult = document.createElement('ul')
+      ult.classList.add('list-unstyled')
+      let union = _.union(winningNumbers, sortedNumbers)
+      let prize
+      if (union.length == 6) {
+        prize = '1등'
+      } else if (union.length == 7) {
+        if (_.union(union, bonusNumbers).length == 7) {
+          prize = '2등'
+        } else {
+          prize = '3등'
+        }
+      } else if (union.length == 8) {
+        prize = '4등'
+      } else if (union.length == 9) {
+        prize = '5등'
+      } else {
+        prize = '꽝'
+      }
+      sortedNumbers.forEach(element => {
+        const lit = document.createElement('li')
+        const pt = document.createElement('p')
+        pt.textContent = element
+        if (element < 10){
+          lit.setAttribute('style', 'background-color: #F0E322') // 노란색
+        } else if (element < 20) {
+          lit.setAttribute('style', 'background-color: #38AEE5') // 하늘색
+        } else if (element < 30) {
+          lit.setAttribute('style', 'background-color: #E6403C') // 빨간색
+        } else if (element < 40) {
+          lit.setAttribute('style', 'background-color: #B5BAAA') // 회색
+        } else {
+          lit.setAttribute('style', 'background-color: #6FEB50') // 연두색
+        }
+        lit.classList.add('rounded-circle', 'border')
+        pt.setAttribute('style', 'color: white')
+        ult.appendChild(lit)
+        lit.appendChild(pt)
+      })
+      const lit = document.createElement('li')
+      const pt = document.createElement('p')
+      pt.textContent = prize
+      if (prize == '꽝') {
+        lit.setAttribute('style', 'color: red')
+      }
+      lit.classList.add('rounded-circle', 'border')
+      ult.appendChild(lit)
+      lit.appendChild(pt)
+      bodyT.appendChild(ult)
+      if (prize != '꽝') {
+        break
+      }
+      
+    }
+
+    })
+
+
+    </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+  crossorigin="anonymous"></script>
+</body>
+</html>
