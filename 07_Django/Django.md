@@ -83,3 +83,125 @@
 - 프레임워크 공부할 때 내부코드나 왜이렇게 되는지 너무 깊게 파고 들면 힘들어짐. 규칙으로 받아들여야 함.
 - Django는 상대적으로 규칙이 많고 어려운 프레임워크는 아님
 - Django mvc
+
+## Django 2일차
+- Django project: 애플리케이션의 집합(DB 설정, URL 연결, 전체 앱 설정 등 처리)
+- Django application: 독립적으로 작동하는 기능 단위 모듈(각자 특정 기능 담당, 다른 앱들과 하나의 프로젝트 구성, MTV 패턴 해당하는 파일 및 폴더 담당)
+- 블로그를 만든다면 프로젝트: 블로그(전체설정 담당) / 앱: 게시글, 댓글, 카테고리 회원 관리 등 (DB, 로직, 화면)
+
+### 앱 생성 & 등록
+
+1. 앱 생성
+  - 앱 이름 `복수형` 권장
+```bash
+python manage.py startapp articles
+# articles: 앱이름
+```
+
+2. 앱 등록
+  - settings.py 파일에서 'articles'(앱이름) 추가
+```python
+# Application definition
+INSTALLED_APPS = [
+    # 앱 등록 권장 순서
+
+    # 1. local app
+    'articles',
+    
+    # 2. 3rd party app(설치를 통해 추가하는앱)
+    
+    # 3. 기본 django app
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+```
+  - 반드시 생성후 등록. 그렇지 않으면 앱 생성 안 됨.
+
+
+### 디자인 패턴
+- 소프트웨어 설계에서 발생하는 문제를 해결하기 위한 일반적인 해결책
+- 공통적 문제를 해결하는 형식화 된 관행
+
+#### MVC 디자인 패턴
+- Model - View - Controller
+- 애플리케이션 구조화하는 대표적 패턴
+- 데이터, 사용자 인터페이스, 비즈니스 로직을 분리
+- 시각적 요소와 뒤에서 실행 되는 로직을 서로 영향 없이, `독립적이고 쉽게 유지보수` 가능
+
+  ![image](https://user-images.githubusercontent.com/110805149/226540868-ed5798cf-5a59-4384-8f2c-2a9bdb2ea7bd.png)
+
+### MTV 디자인 패턴
+- Model - Template - View
+- django에서 애플리케이션을 구조화 하는 패턴
+- 기존 MVC 패턴과 동일하지만 명칭은 다르게 정의
+
+- MVC : Model - View - Controller
+- MTV : Model - Template - View
+
+### 프로젝트 구조
+- settings. py: 프로젝트의 모든 설정 관리
+- urls.py: url과 view 연결
+
+- 아래는 우선 참고만(현재 단계 별도수정 안함)
+- _init_.py: 해당폴더를 패키지로 인식하도록 설정
+- asgi.py: 비동기식 웹서버와의 연결 관련설정
+- wsgi.py: 웹서버와의 연결 관련설정
+- manage.py: django 프로젝트와 다양한 방법으로 상호작용하는 커맨드라인 유틸리티
+
+### 앱 구조
+- admin.py: 관리자용 페이지 설정
+- models.py: DB와 관련된 Model 정의, MTV 패턴의 M
+- views.py: HTTP 요청을 처리하고 해당 요청에 대한 응답 반환, MTV 패턴의 V
+
+- 아래는 우선 참고만(현재 단계 별도수정 안함)
+- apps.py: 앱의 정보가 작성된 곳
+- tests.py: 프로젝트 테스트 코드를 작성하는 곳
+
+### 요청과 응답
+- 요청 > urls.py > view.py > templates > 응답
+
+#### URLs
+```python
+from articles import views
+# 1. articles 앱에서 import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('articles/', views.index),
+# 2. path에 url 추가하기, 마지막 / 필수
+# views.py 안에 index 함수
+
+]
+```
+
+#### Views
+```python
+from django.shortcuts import render
+# render 페이지를 만들어주는 함수
+
+
+# Create your views here.
+# 특정 기능을 수행하는 view 함수를 만듦
+def index(request):
+    return render(request, 'articles/index.html')
+# return 응답(메인페이지)
+#  'index.html'안에는 경로가 문자열로 들어가야함 'articles/index.html'
+```
+
+#### Templates
+- articles 폴더 안에 `templates 폴더 생성`
+- templates 폴더안에 템플릿 페이지(html 등) 작성
+
+  ![image](https://user-images.githubusercontent.com/110805149/226558374-5b803e38-e985-4456-857e-177c69886645.png)
+
+
+## 참고
+- Django(프레임워크, 백엔드)는 json을 만들고 그 json을 프론트엔드 프레임워크가 받아서 사용
+- 그래서 templates가 자동생성 안되는 것
+
+
+
