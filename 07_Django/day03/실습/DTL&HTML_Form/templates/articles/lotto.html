@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="m-2">
+  {% for lotto_result in lotto_results %}
+    <div>{{ lotto_result }}</div> 
+  {% endfor %}
+</div>
+
+<form action="/lotto-create/" method="GET">
+    <button type="submit" class="col-1 m-2 btn btn-primary">뒤로가기</button>
+</form>
+
+
+{% endblock content %}

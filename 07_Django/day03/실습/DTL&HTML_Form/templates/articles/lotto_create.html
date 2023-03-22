@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form action="/lotto/" method="GET" id="lotto-form">
+  <div class="col-3 m-5 d-flex">
+    <input type="number" name="count" class="form-control col-9" placeholder="로또 생성 수" min="0" max="100" id="lotto-count">
+    <button type="submit" class="col-3 mx-2 btn btn-primary">생성</button>
+  </div>
+</form>
+
+{% comment %} 로또 생성수 입력 안했을 때 alert {% endcomment %}
+<script>
+  const lottoForm = document.getElementById("lotto-form")
+  lottoForm.addEventListener("submit", function(event) {
+    const count = document.getElementById("lotto-count").value
+    if (!count) {
+      event.preventDefault()
+      alert("로또 생성 수를 입력하세요.")
+    }
+  })
+</script>
+
+{% endblock content %}
