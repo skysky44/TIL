@@ -380,3 +380,88 @@ TEMPLATES = [
 1. 오른쪽 목차를 본다. 내가 들어온 곳이 적합한지 보고, 찾을 주제로 이동
 2. 만약 필터의 세부적인 내용 보고 싶다면 포함된 링크로 이동
 
+
+## Django 4일차
+
+### Django URLs
+- URL dispatcher(운항 관리자, 분배기): URL 패턴을 정의하고 해당 패턴이 일치하는 요청을 처리할 view 함수를 연결(매핑)
+- Variable Routing: URL 일부에 변수를 포함시키는 것(변수는 `view 함수의 인자`로 전달 할 수 있음)
+- Path converters: URL 변수의 타입을 지정(str, int 등 5가지 타입 지원)
+- urls.py의 num(변수)과 view.py의 num(변수)랑 변수명이 맞아야 함.
+
+```python
+# urls.py
+# <path_converter:variable_name>
+path('articles/<int:num>/', views.detail)
+
+# view.py
+# 변수는 `view 함수의 인자`로 전달 할 수 있음
+def detail(request, num):
+    context = {
+        'num': num
+    }
+    return render(request, 'articles/detail.html', context)
+
+# detail.html
+<h3>여기는 {{ num }}번 글 입니다.</h3>
+
+```
+
+### App URL mapping
+- 각 앱에 URL을 정의하는 것
+- 프로젝트와 각 앱의 URL을 나누어 관리
+
+### mapping 순서
+```python
+# firstpjt/urls.py
+# 1. include 추가
+from django.urls import path, include
+
+urlpatterns = [
+
+    path('articles/', include('articles.urls')),
+    # 2. aricles/로 입력된 url을 articles 앱의 urls.py 파일로 연결(매핑) 
+
+]
+
+
+# articles/urls.py
+
+# 3. 상위 경로 import
+from django.urls import path
+from . import views # 명시적 상대경로 (. 현재위치 django 권장사항)
+
+# 4. 기존처럼 작성(실제 URL은 articles/index/가 되는 것)
+urlpatterns = [
+    path('index/', views.index),
+]
+```
+
+### URL 이름 지정
+- URL 이름 + app 이름표 붙이기
+- name='throw'
+- {% url 'articles:throw' arg1 arg2 %}
+- 주의: app 이름표 지정후에는 app_name:url_name 형태로만 사용 가능
+
+```python
+# articles/urls.py
+
+app_name = 'articles'
+urlpatterns = [
+    path('throw/', views.throw, name='throw'),
+]
+```
+
+```html
+<!-- throw.html -->
+<a href="{% url 'articles:throw' arg1 arg2 %}"></a>
+<!-- throw/arg1/arg2/인 URL로 연결 -->
+```
+
+### 참고
+- Trailing Slashes: 장고는 URL 끝에 '/'없으면 자동으로 붙임
+- url 뒤에 / 붙고 안 붙고는 기술적으로는 다른 건데 네이버나 구글은 각자 서버에서 내부적으로 처리 하는 것
+- NoReverseMatch 에러나오면 무조건 URL관련 문제!
+- 루트 페이지(?, 첫페이지)을 위해서 프로젝트에 프로젝트폴더에 views.py를 생성하고
+index를 만들어 주는 방법. path('',)빈 문자열로 지정
+- 서버 켜진지 확인하는 법: 윈도우 포트 확인 검색(cmd 명령어:nestat ~~~)
