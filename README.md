@@ -14,3 +14,5 @@
 - [Algorithm](03_Algorithm/algorithm.md)
 
 - [Database](04_DB/DB.md)
+
+- [Django](07_Djnago/Django.md)
