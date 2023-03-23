@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<h1>첫 페이지 입니다.</h1>
+
+<a href="{% url 'articles:throw' %}">throw</a> <br>
+<a href="{% url 'articles:number-print-index' %}">number-print</a> <br>
+<a href="{% url 'articles:calculate-index' %}">calculate</a>
+
+{% endblock content %}

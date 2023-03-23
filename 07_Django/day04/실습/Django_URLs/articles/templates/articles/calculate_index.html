@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% comment %} <a href="{% url 'articles:calculate' a 1 %}"> 2 1</a><br> {% endcomment %}
+<a href="{% url 'articles:calculate' 2 1 %}"> 2 1</a><br>
+<a href="{% url 'articles:calculate' 10 5 %}">10 5</a><br>
+<a href="{% url 'articles:calculate' 8 4 %}">8 4</a><br>
+<a href="{% url 'articles:calculate' 10 2 %}">10 2</a>
+{% endblock content %}
