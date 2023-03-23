@@ -15,4 +15,4 @@
 
 - [Database](04_DB/DB.md)
 
-- [Django](07_Djnago/Django.md)
+- [Django](07_Django/Django.md)
