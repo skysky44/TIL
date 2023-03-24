@@ -465,3 +465,128 @@ urlpatterns = [
 - 루트 페이지(?, 첫페이지)을 위해서 프로젝트에 프로젝트폴더에 views.py를 생성하고
 index를 만들어 주는 방법. path('',)빈 문자열로 지정
 - 서버 켜진지 확인하는 법: 윈도우 포트 확인 검색(cmd 명령어:nestat ~~~)
+
+## Django 5일차
+
+### Django Model
+- 테이블을 정의하고 데이터를 조작할 수 있는 기능들을 제공
+- 테이블 구조 설계하는 청사진(blueprint)
+
+### model class 작성
+- models.py 작성
+- class 상속을 이용
+- 테이블의 필드 이름(클래스 변수명) / 테이블 필드의 데이터 타입 / 테이블 필드의 제약조건
+
+```python
+# articles/models.py
+from django.db import models
+
+class Article(model.Model):
+
+  # id필드는 자동생성
+  # Model이라는 부모 클래스 상속 받음
+    title = models.CharField(max_length=10)
+    # 필드 이름(변수명) title / 데이터 타입(모델 필드 클래스) CharField / 제약조건(모델 필드 클래스의 키워드 인자) max_length=10
+    content = models.TextField()
+
+```
+- CharField(): 길이 제한이 있는 문자열을 넣을 때 사용(필드 최대 길이 결정 max_length 필수 인자)
+- TextField(): 글자의 수가 많을 때 사용
+- 위의 문자열 필드의 경우 null=True 대신 blank=True 권장
+- Date TimeField(): 날짜와 시간 넣을 때
+- Date TimeField의 선택 인자 auto_now, auto_now_add
+- auto_now: 데이터가 저장될 때마다 자동으로 현재 날짜시간 저장(수정한 시간)
+- auto_now_add: 데이터가 `처음`생성 될때만 자동으로 현재 날짜 시간 저장
+
+### Migrations
+- 순서: `models.py에 class 생성 > 설계도 작성 > 설계도를 DB에 반영`
+
+- model 클래스의 변경사항(필드 생성, 추가 수정 등)을 DB에 최종 반영하는 방법
+- Migrations 과정 model class ---(`makemigrations`)---> migrations파일(설계도) ---(`migrate`)--->db.sqlite3
+
+![image](https://user-images.githubusercontent.com/110805149/227451788-65828a8f-4a1b-414b-8edb-b2f842e18068.png)
+
+### Migrations 핵심 명령어
+```bash
+# 1. 설계도(migration) 작성
+$ python manage.py makemigrations
+
+# 2. 설계도를 DB에 전달하여 반영
+$ python manage.py migrate
+
+```
+
+#### 기존 테이블에 필드를 추가해야 할 때
+- models.py에 `클래스 변수를 추가` > (makemigrations `옵션 선택`)---> migrations파일(설계도) ---(migrate)--->db.sqlite3
+
+
+```python
+# articles/models.py
+
+class Article(model.Model):
+    title = models.CharField(max_length=10)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    # 이후에 두개의 필드를 추가
+
+```
+- 필드 추가 후 기존 순서대로 재진행
+- makeigrations하면 기본 값 설정이 필요.
+- 1번은 직접 기본값 입력하는 방법
+- 2번은 현재 대화에서 나간후 models.py에서 관련 설정하는 법
+- 1번 2번 읽어보고 상황에 맞게 진행 하면 됨
+
+```bash
+# 1. 설계도(migration) 작성
+$ python manage.py makemigrations
+
+
+# 2. 설계도를 DB에 전달하여 반영
+$ python manage.py migrate
+
+```
+
+### Admin Site
+- django는 추가 설치 및 설정 없이 자동으로 관리자 인터페이스를 제공
+- 데이터 관련 테스트 및 확인 하기 매우 유용
+
+- 순서: `admin 계정 생성 > DB에 생성된 admin 계정 확인 > admin에 모델 클래스 등록 > 서버켜고 로그인 후 모델클래스 등록 확인 > 데이터 CRUD 테스트, 실제 DB 테이블 저장 확인`
+
+#### admin 계정 생성
+- createsuperuser
+
+```bash
+$ python manage.py createsuperuser
+# email은 선택 사항(입력 안하고 진행 가능)
+# 비밀 번호 생성시 보안상 터미널에 출력 안됨 무시하고 입력 하면 됨. 커서(?)안움직임
+```
+
+#### admin에 모델 클래스 등록
+```python
+# articles/admin.py
+
+from django.contrib import admin
+# 명시적 상대경로 .
+# from . import models 이거 보다는 아래가 편함(models를 반복해야하니까)
+from .models import Article
+
+# 만든 Article 클래스를 등록
+admin.site.register(Article)
+
+# 암기 꿀팁: admin site 에 등록(register) 하겠다
+```
+
+### Migrations 기타 명령어
+
+```bash
+$ python manage.py showmigrations
+# migrations 파일의 migrate 여부 확인 용도
+# [X] 표시가 있으면 migrate 완료되었음 의미
+
+$ python manage.py sqlmigrate articles 0001
+# 해당 migraions 파일이 sql 문으로 어떻게 해석 되어 DB에 전달되는지 확인 용도
+# articles는 앱이름 0001은 migrations 파일 번호
+
+```
+

@@ -77,3 +77,92 @@ INSTALLED_APPS = [
 ]
 ```
   - 반드시 생성후 등록. 그렇지 않으면 앱 생성 안 됨.
+
+
+## Migrations 순서
+
+- 순서: `models.py에 class 생성 > 설계도 작성 > 설계도를 DB에 반영`
+- Migrations 과정 model class ---(`makemigrations`)---> migrations파일(설계도) ---(`migrate`)--->db.sqlite3
+
+![image](https://user-images.githubusercontent.com/110805149/227451788-65828a8f-4a1b-414b-8edb-b2f842e18068.png)
+
+### Migrations 핵심 명령어
+```bash
+# 1. 설계도(migration) 작성
+$ python manage.py makemigrations
+
+# 2. 설계도를 DB에 전달하여 반영
+$ python manage.py migrate
+
+```
+
+#### 기존 테이블에 필드를 추가해야 할 때
+- models.py에 `클래스 변수를 추가` > (makemigrations `옵션 선택`)---> migrations파일(설계도) ---(migrate)--->db.sqlite3
+
+
+```python
+# articles/models.py
+
+class Article(model.Model):
+    title = models.CharField(max_length=10)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    # 이후에 두개의 필드를 추가
+
+```
+- 필드 추가 후 기존 순서대로 재진행
+- makeigrations하면 기본 값 설정이 필요.
+- 1번은 직접 기본값 입력하는 방법
+- 2번은 현재 대화에서 나간후 models.py에서 관련 설정하는 법
+- 1번 2번 읽어보고 상황에 맞게 진행 하면 됨
+
+```bash
+# 1. 설계도(migration) 작성
+$ python manage.py makemigrations
+
+
+# 2. 설계도를 DB에 전달하여 반영
+$ python manage.py migrate
+
+```
+
+### Admin Site
+- 순서: `admin 계정 생성 > DB에 생성된 admin 계정 확인 > admin에 모델 클래스 등록 > 서버켜고 로그인 후 모델클래스 등록 확인 > 데이터 CRUD 테스트, 실제 DB 테이블 저장 확인`
+
+#### admin 계정 생성
+- createsuperuser
+
+```bash
+$ python manage.py createsuperuser
+# email은 선택 사항(입력 안하고 진행 가능)
+# 비밀 번호 생성시 보안상 터미널에 출력 안됨 무시하고 입력 하면 됨. 커서(?)안움직임
+```
+
+#### admin에 모델 클래스 등록
+```python
+# articles/admin.py
+
+from django.contrib import admin
+# 명시적 상대경로 .
+# from . import models 이거 보다는 아래가 편함(models를 반복해야하니까)
+from .models import Article
+
+# 만든 Article 클래스를 등록
+admin.site.register(Article)
+
+# 암기 꿀팁: admin site 에 등록(register) 하겠다
+```
+
+### Migrations 기타 명령어
+
+```bash
+$ python manage.py showmigrations
+# migrations 파일의 migrate 여부 확인 용도
+# [X] 표시가 있으면 migrate 완료되었음 의미
+
+$ python manage.py sqlmigrate articles 0001
+# 해당 migraions 파일이 sql 문으로 어떻게 해석 되어 DB에 전달되는지 확인 용도
+# articles는 앱이름 0001은 migrations 파일 번호
+
+```
