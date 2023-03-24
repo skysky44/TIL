@@ -551,7 +551,7 @@ $ python manage.py migrate
 - django는 추가 설치 및 설정 없이 자동으로 관리자 인터페이스를 제공
 - 데이터 관련 테스트 및 확인 하기 매우 유용
 
-- 순서: `admin 계정 생성 > DB에 생성된 admin 계정 확인 > admin에 모델 클래스 등록 > 서버켜고 로그인 후 모델클래스 등록 확인 > 데이터 CRUD 테스트, 실제 DB 테이블 저장 확인`
+- 순서: `admin 계정 생성 > DB에 생성된 admin 계정 확인 > admin 페이지에 모델 클래스 등록 > 서버켜고 로그인 후 모델클래스 등록 확인 > 데이터 CRUD 테스트, 실제 DB 테이블 저장 확인`
 
 #### admin 계정 생성
 - createsuperuser
@@ -562,7 +562,7 @@ $ python manage.py createsuperuser
 # 비밀 번호 생성시 보안상 터미널에 출력 안됨 무시하고 입력 하면 됨. 커서(?)안움직임
 ```
 
-#### admin에 모델 클래스 등록
+#### admin 페이지에 모델 클래스 등록
 ```python
 # articles/admin.py
 
