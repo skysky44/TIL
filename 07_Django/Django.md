@@ -590,3 +590,114 @@ $ python manage.py sqlmigrate articles 0001
 
 ```
 
+## Django 6일차
+### ORM(Object-Relational-Mapping)
+- 객체 지향 프로그래밍 언어를 사용하여 호환되지 않는 시스템 간에 데이터를 변환하는 프로그래밍 기술
+
+### QuerySet API
+```python
+Article.objects.all()
+# Model class . Manager . QuerySet API
+```
+![image](https://user-images.githubusercontent.com/110805149/228266213-357727e5-f976-4738-a1c3-c3390e5211ca.png)
+
+#### Query
+- 데이터베이스에 특정한 데이터를 보여 달라는 요청
+- 파이썬으로 작성한 코드가 ORM에 의해 SQL로 변환되어 DB에 전달
+- DB의 응답 데이터를 ORM이 QuerySet 자료형태로 변환하여 전달
+
+#### QuerySet
+- 데이터베이스에게서 전달 받은 객체 목록(데이터 모음, 순회 가능)
+- Django ORM을 통해 만들어진 자료형
+- 단, 데이터베이스가 단일한 객체 반환 할 때(get)는 QuerySet 아닌 모델(Class)의 인스턴스로 반환
+
+### ORM CREATE
+- 외부 라이브러리 설치 및 설정
+```bash
+# 설치
+$ pip install ipython
+$ pip install django-extensions
+
+# setting.py Installed apps 추가
+INSTALLED_APPS = [
+  'articles',
+  'django_extensions',
+]
+# requirements.txt에 추가
+$ pip freeze > requirements.txt
+```
+#### Django shell
+- django 환경 안에서 실행되는 python shell
+- 입력하는 QuerySet API 구문이 django 프로젝트에 영향을 미침
+
+#### 데이터 객체를 만드는 (생성하는) 3가지 방법
+- 방법 1
+```python
+# Article 클래스의 인스턴스 생성
+article = Article()
+
+# article 인스턴스에 title과 content 인스턴스 변수에 값을 저장
+article.title = '제목A'
+article.content = '내용A'
+
+# 테이블에 레코드 하나 생성을 위해 저장(인스턴스 메서드 save 호출)
+article.save()
+```
+
+- 방법 2
+```python
+article = Article(title='제목A', content='내용A')
+article.save()
+```
+
+- 방법 3(자동 save)
+```python 
+# QuerySet api의 create 메서드를 활용
+Article.objects.create(title='제목A', content='내용A')
+```
+
+### ORM READ
+#### 전체 데이터 조회
+```python
+Article.objects.all()
+# .all() 기억!!
+```
+
+#### 단일 데이터 조회
+- get() 사용
+- 객체를 찾을 수 없으면 DoesNotExist 예외 발생
+- 둘 이상의 객체 찾으면 MultipleObjectsReturned 예외 발생
+
+```python
+Article.objects.get(pk=1)
+
+Article.objects.get(pk=100)
+# pk 100이 없을 때 DoesNotExist 예외 발생
+
+Article.objects.get(content='django!')
+# content가 'django!'인 데이터가 2개 이상이면 리턴 안됨(단일 데이터 조회)
+# MultipleObjectsReturned 예외 발생
+```
+
+#### 특정 조건 데이터 조회(단일 데이터 아닌 경우)
+- filter() 사용
+```python
+Article.objects.filter(content='django!')
+```
+
+
+#### Field lookups
+- 특정 레코드에 대한 조건 설정 방법
+- QuerySet 메서드 filter(), exclude() 및 get()에 대한 키워드 인자로 지정
+- Field lookup 문서: https://docs.djangoproject.com/en/3.2/ref/models/querysets/#field-lookups
+
+#### ORM, QuerySet API 사용 이유
+- 데이터베이스 쿼리를 추상화하여 django 개발자가 데이터베이스와 직접 상호 작용하지 않아도 되도록 함
+- 데이터베이스와의 결합도를 낮추고 개발자가 더욱 직관적이고 생산적으로 개발할 수 있도록 도움
+
+
+### 참고 
+- QuerySet API 문서 : https://docs.djangoproject.com/en/3.2/topics/db/queries/
+- print(Article.objects.all().query) 입력하면 sql문으로 확인 가능
+- django_extensions 설치 후 등록 해야함(그래야 shell_plus도 실행됨)
+- 결과물 출력 안될 때 models.py도 확인
