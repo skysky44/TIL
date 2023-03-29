@@ -616,12 +616,13 @@ Article.objects.all()
 ```bash
 # 설치
 $ pip install ipython
-$ pip install django-extensions
+$ pip install django-extensions # - 하이픈 
 
 # setting.py Installed apps 추가
 INSTALLED_APPS = [
   'articles',
-  'django_extensions',
+  'django_extensions', 
+  # 이거 - 하이픈 아니고 _ 언더바
 ]
 # requirements.txt에 추가
 $ pip freeze > requirements.txt
@@ -701,3 +702,216 @@ Article.objects.filter(content='django!')
 - print(Article.objects.all().query) 입력하면 sql문으로 확인 가능
 - django_extensions 설치 후 등록 해야함(그래야 shell_plus도 실행됨)
 - 결과물 출력 안될 때 models.py도 확인
+
+## Django 7일차
+
+### ORM UPDATE
+```python
+# 수정할 인스턴스 조회
+article = Article.objects.get(pk=1)
+
+# 인스턴스 변수를 변경
+article.title = 'bye'
+
+# 저장
+article.save()
+
+# 변경 내용 확인 'bye'
+article.title
+```
+
+### ORM DELETE
+- 삭제하면 리턴 값이 있다.
+- '몇 번 글이 삭제되었습니다' 출력가능
+
+```python
+# 삭제할 인스턴스 조회
+article = Article.objects.get(pk=1)
+
+# delete 메서드 호출(삭제 된 객체가 반환)
+article.delete()
+(1, {'articles.Article' : 1})
+
+# 삭제한 데이터느 더 이상 조회 안 됨
+Article.objects.get(pk=1)
+DoesNotExist
+```
+
+### ORM with view
+#### 사전준비
+```python
+# app URLs 분할 및 연결
+# crud/urls.py
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+  path('admin/', admin.site.urls),
+  path('articles/', include('articles.urls')),
+]
+
+# articles/urls.py
+from django.urls import path
+from . import views
+app_name = 'articles'
+urlpatterns = [
+  path('', view.index, name='index'),
+]
+```
+
+#### READ
+##### 전체게시글 조회
+```python
+# articles/urls.py
+app_name = 'articles'
+urlpatterns = [
+    path('', views.index, name='index'),
+]
+
+#articles/views.py
+
+def index(request):
+    # DB에 전체 게시글 조회를 요청
+    articles = Article.objects.all()  # 전체 조회니까 복수형 articles로 변수
+    # print(articles)
+    context = {
+        'articles': articles
+    }
+    return render(request, 'articles/index.html', context)
+```
+```html
+<!-- articles/index.html -->
+
+<body>
+  <h1>Articles</h1>
+  <a href="{% url 'articles:new' %}">[NEW]</a>
+  {% for article in articles  %}
+    {% comment %} <p>글번호: {{ article.pk }}</p> {% endcomment %}
+    <p>제목: <a href="{% url 'articles:detail' article.pk %}">{{ article.title }}</a></p>
+    <p>내용: {{ article.content }}</p>
+    <hr>
+  {% endfor %}
+</body>
+```
+
+##### 단일게시글 조회
+```python
+# articles/urls.py
+app_name = 'articles'
+urlpatterns = [
+    path('<int:pk>/', views.detail, name='detail'),
+]
+
+# articles/view.py
+
+def detail(request, pk):
+    article = Article.objects.get(pk=pk)
+    # print(article)
+    context = {
+        'article': article,  # 단일객체 조회라서 단수형으로
+    }
+    return render(request, 'articles/detail.html', context)
+```
+```html
+<!-- articles/detail.html -->
+<body>
+  <h1>Detail</h1>
+  <p>글 번호: {{ article.pk }}</p>
+  <p>제목: {{ article.title }}</p>
+  <p>내용: {{ article.content }}</p>
+  <p>작성일: {{ article.created_at }}</p>
+  <p>수정일: {{ article.updated_at }}</p>
+  <a href="{% url 'articles:index' %}">[BACK]</a>
+</body>
+```
+
+#### CREATE
+- create 로직 구현하기위해 필요한 view 함수
+  - new: 사용자의 입력을 받는 페이지를 렌더링
+  - create: 사용자가 입력한 데이터를 받아 DB에 저장
+
+##### new 로직 구성
+```python
+# articles/urls.py
+app_name = 'articles'
+urlpatterns = [
+    path('new/', views.new, name='new'),
+]
+
+# articles/view.py
+
+def new(request):
+    return render(request, 'articles/new.html')
+```
+```html
+<!-- articles/new.html -->
+<body>
+  <h1>New</h1>
+  <form action="{% url 'articles:create' %}" method="GET">
+    <div>
+      <label for="title">제목: </label>
+      <input type="text" name="title" id="title">
+    </div>
+    <div>
+      <label for="conent">내용: </label>
+      <textarea name="content" id="content" cols="30" rows="10"></textarea>
+      {% comment %} textarea 우측하단에 늘릴 수 있는 손잡이 있음 {% endcomment %}
+    </div>
+    <input type="submit">
+  </form>
+  <a href="{% url 'articles:index' %}">[BACK]</a>
+</body>
+```
+
+##### create 로직 구성
+```python
+# articles/urls.py
+app_name = 'articles'
+urlpatterns = [
+    path('create/', views.create, name='create'),
+]
+
+# articles/view.py
+
+def create(request):
+    # new에서 보낸 사용자 데이터를 받아서 변수에 할당
+    title = request.GET.get('title')
+    content = request.GET.get('content')
+    # request.GET 데이터 dictionary다
+
+    # # 받은 데이터를 DB에 저장
+    # # 1
+    # article = Article()
+    # article.title = title
+    # article.content = content
+    # article.save()
+
+    # 2 (2번을 사용하기로)
+    article = Article(title=title, content=content)
+    # 저장 전에 유효성 검사와 같은 추가 작업을 위해 2번 방법 택함(현재는 models.py에 있는 max_length 동작 안하고 있음..)
+    article.save()
+
+    # 3
+    # Article.objects.create(title=title, content=content)
+
+    # 결과 페이지 반환
+    return render(request, 'articles/create.html')
+```
+```html
+<!-- articles/create.html -->
+<body>
+  <h1>작성이 완료되었습니다.</h1>
+  <a href="{% url 'articles:index' %}">[BACK]</a>
+</body>
+```
+
+
+### 참고
+- 한국 시간 설정 하기
+```python
+# settings.py
+LANGUAGE_CODE = 'ko-kr'
+TIME_ZONE = 'Asia/Seoul'
+```
+- 프로젝트 연습 방법
+  - 새로운 프로젝트 생성부터 배운 곳 까지. 옆에 자료를 먼저 띄워 두기 보다 안 본 상태로 해보고 막히면 막힌 부분을 별도로 기록(왜 막혔는지 채워가기)하고 완성까지
