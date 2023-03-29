@@ -1,0 +1,29 @@
+{% extends 'todos/base.html' %}
+
+{% block content %}
+<h3>할 일 추가</h3>
+<form action="{% url 'todos:create' %}">
+  <div>
+    <label for="title">제목</label>
+    <input type="text" name='title' id='title'></div>
+  <div>
+    <label for="content">내용</label><br>
+    <textarea name="content" id="content" cols="30" rows="10"></textarea>
+  </div>
+  <div>
+    <label for="priority">우선순위</label>
+    <input type="number" name='priority'>
+  </div>
+  <div>
+    <label for="deadline">마감기한</label>
+    <input type="date" name='deadline'>
+  </div>
+  <div>
+    <input type="submit">
+  </div>
+  <div>
+    <a href="{% url 'todos:index' %}">[BACK]</a>
+  </div>
+</form>
+{% endblock content %}
+

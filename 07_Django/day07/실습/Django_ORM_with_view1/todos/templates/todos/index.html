@@ -1,0 +1,14 @@
+{% extends 'todos/base.html' %}
+
+{% block content %}
+<a class='border' href="{% url 'todos:new' %}">Todo 추가</a>
+<div class='my-3'>
+  {% for todo in todos%}
+  <div><a href="{% url 'todos:detail' todo.pk %}">{{ todo.title }}</a></div>
+  <div>{{ todo.content }}</div>
+  <hr>
+  {% endfor %}
+</div>
+
+{% endblock content %}
+

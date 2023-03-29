@@ -1,0 +1,12 @@
+{% extends 'todos/base.html' %}
+
+{% block content %}
+<h1>할 일 {{todo.pk}}</h1>
+<div>제목 : {{todo.title}} </div>
+<div>내용 : {{todo.content}}</div>
+<div>우선순위 : {{todo.priority}}</div>
+<div>마감기한 : {{todo.deadline}}</div>
+<div>완료여부 : {{todo.completed}}</div>
+<a href="{% url 'todos:index' %}">[BACK]</a>
+{% endblock content %}
+
