@@ -1,0 +1,24 @@
+{% extends 'todos/base.html' %}
+
+{% block content %}
+<a href="{% url 'todos:new' %}">[추가]</a>
+<h4>전체 할 일</h4>
+
+
+{% for todo in todos %}
+<div>
+  제목: <a href="{% url 'todos:detail' todo.pk %}">{{ todo.title }}</a>
+</div>
+<div>내용: {{ todo.content }}</div>
+<div>
+  {% if todo.completed == True  %}
+  완료: {{ todo.completed }} <a href="{% url 'todos:completed' todo.pk %}">완료 취소</a>
+  {% else %}
+  완료: {{ todo.completed }} <a href="{% url 'todos:completed' todo.pk %}">완료 하기</a>
+  {% endif %}</div>
+
+<hr>
+{% endfor %}
+
+
+{% endblock content %}
