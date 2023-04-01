@@ -915,3 +915,189 @@ TIME_ZONE = 'Asia/Seoul'
 ```
 - 프로젝트 연습 방법
   - 새로운 프로젝트 생성부터 배운 곳 까지. 옆에 자료를 먼저 띄워 두기 보다 안 본 상태로 해보고 막히면 막힌 부분을 별도로 기록(왜 막혔는지 채워가기)하고 완성까지
+
+
+## Django 8일차
+### HTTP request methods
+- 게시글 작성 후 작성 완료 페이지 렌더링 하는 것은 적절한 응답 아님
+- 데이터 저장 후 유저를 어디론가 다시보내야 함
+#### redirect()
+- 인자에 작성된 주소로 다시 요청을 보냄
+
+```python
+# views.py
+from django.shortcuts import render, redirect
+# redirect import 하기
+
+def create(request):
+    # 생략...
+    return redirect('todos:detail', todos.pk)
+    # pk 다시 보낼때 , 로 구분
+```
+
+### HTTP
+- 네트워크 상에서 데이터를 주고 받기위한 약속
+
+#### HTTP request methods
+- 데이터(리소스)에 어떤 요청(행동)을 원하는지 나타내는 것
+- GET & POST
+
+##### GET Method
+- 특정 리소스를 조회하는 요청
+- Query String 형식으로 보내짐
+- 데이터를 가져올 때(조회)만 사용
+
+##### POST Method
+- 특정 리소스에 변경 사항을 만드는 요청
+- HTTP Body에 담겨 보내짐
+- 게시글 작성후 403 응답 확인(CSRF 토큰 필요)
+```html
+<!-- new.html -->
+<form action="{% url 'articles:create' %}" method="POST">
+  {% csrf_token %}
+<!-- csrf 토큰 없으면 403 응답 -->
+```
+```python
+# views.py
+def create(request):
+    title = request.POST.get('title')
+    content = request.POST.get('content')
+    article = Article(title=title, content=content)
+    article.save()
+    # 생성한 글의 주소 이동 응답
+    # 새로 생성한 글의 pk를 활용
+    # 템플릿과 비교 했을 때 띄어쓰기 대신 쉼표 사용한다고 생각하면 됨
+    return redirect("articles:detail", article.pk)
+```
+##### CSRF(Cross-Site-Request-Forgery)
+- 사이트 간 요청 위조
+- 사용자가 자신의 의지와 무관하게 공격자가 의도한 행동을 하여 특정 웹페이지를 취약하게 하거나 수정, 삭제 등의 작업을 하게 만드는 공격 방법
+- Security Token(CSRF Token): 대표적인 CSRF 방어 방법
+  - 서버는 사용자의 입력데이터에 임의의 난수 값(token) 부여
+  - 매 요청 마다 해당 token  포함시켜 전송 시킴
+  - 이후 서버 요청 받을 때마다 전달된 token 유효한지 검증
+- 토큰 사용해 최소한의 신원 확인 하는 것
+- 개발자도구보면 form 태그 안에 input hidden으로 숨겨져 있음
+- {% csrf_token %} form 아래 추가
+- settings.py 보면 중간 연결다리. csrf가 있음
+
+```html
+<!-- new.html -->
+<form  method="POST">
+  {% csrf_token %}
+<!-- csrf 토큰 없으면 403 응답 -->
+```
+
+#### DELETE
+##### delete 로직
+```python
+# urls.py
+urlpatterns = [
+    path('<int:pk>/delete/', views.delete, name="delete"),
+]
+
+# view.py
+def delete(request, pk):
+    todo = Todo.objects.get(pk=pk)
+    todo.delete()
+    return redirect('todos:index')
+```
+```html
+<!-- detail.html -->
+<form action="{% url 'todos:delete' todo.pk %}" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="삭제">
+</form>
+```
+
+#### UPDATE
+- Update 로직 위해 필요한 view 함수: edit, update
+- edit: 사용자의 입력을 받는 페이지(수정페이지)를 렌더링
+- update: 사용자가 입력한 데이터를 받아 DB에 저장
+
+##### edit 로직
+```python
+# urls.py
+urlpatterns = [
+    path('<int:pk>/edit/', views.edit, name="edit"),
+]
+
+# view.py
+def edit(request, pk):
+    todo = Todo.objects.get(pk=pk)
+    context = {
+        'todo': todo
+    }
+    return render(request, 'todos/edit.html', context)
+```
+```html
+<!-- edit.html -->
+{% extends 'todos/base.html' %}
+
+{% block content %}
+<h3>할 일 수정</h3>
+<form action="{% url 'todos:update' todo.pk %}" method="POST" >
+  {% csrf_token %}
+  <div>
+    <label for="title">제목</label><br>
+    <input type="text" id="title" name="title" value={{ todo.title }}>
+    <!-- value 입력이 중요 -->
+  </div>
+  <div>
+    <label for="content">내용</label><br>
+    <textarea name="content" id="content" cols="30" rows="10">{{ todo.content }}</textarea>
+    <!-- textarea는 value 입력이 안됨. 태그에 직접 입력 -->
+  </div>
+  <div>
+    <label for="priority">우선순위</label><br>
+    <input type="number" id="priority" name="priority" value={{ todo.priority }}>
+    <!-- value 입력이 중요 -->
+  </div>
+  <div>
+    <label for="deadline">마감기한</label><br>
+    <input type="date" id="deadline" name="deadline" value={{ todo.deadline|date:"Y-m-d" }}>
+    <!-- 날짜 형식을 맞춰는 방법 {{ value|date: }}-->
+  </div>
+  <div>
+    <br>
+    <input type="submit">
+  </div>
+
+</form>
+
+{% endblock content %}
+
+<!-- detail.html -->
+<!-- edit 버튼 -->
+<a href="{% url 'todos:edit' todo.pk %}">[수정]</a>
+```
+
+##### Update 로직
+```python
+# urls.py
+urlpatterns = [
+    path('<int:pk>/update/', views.update, name="update"),
+]
+
+# view.py
+def update(request, pk):
+    todo = Todo.objects.get(pk=pk)
+    todo.title = request.POST.get('title')
+    todo.content = request.POST.get('content')
+    todo.priority = request.POST.get('priority')
+    todo.deadline = request.POST.get('deadline')
+    todo.save()
+    return redirect('todos:index')
+```
+```html
+<!-- edit.html -->
+{% block content %}
+<h3>할 일 수정</h3>
+<!-- {% url 'todos:update' todo.pk %} 중요 -->
+<form action="{% url 'todos:update' todo.pk %}" method="POST" >
+  {% csrf_token %}
+```
+
+## 참고
+- a태그는 get만 가능
+- 추후 REST API에서 효율적인 URL 구조 다룰 예정
