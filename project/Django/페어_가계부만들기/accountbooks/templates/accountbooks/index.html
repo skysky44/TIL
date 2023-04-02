@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block style %}
+{% endblock style %}
+
+{% block content %}
+  <div class="container m-5">
+    <h1 class ="m-5">
+      <a href="{% url 'accountbooks:new' %}">가계부 작성</a>
+    </h1>
+    <div class="">
+      <form action="{% url 'accountbooks:select' %}" method="GET" class="input-group">
+        <select class=" form-select form-control" aria-label="Default select example" name="category" id="select" aria-describedby="basic-addon2">
+          <option selected>유형을 고르세요</option>
+          <option value="전체">전체</option>
+          <option value="식비">식비</option>
+          <option value="교통비">교통비</option>
+          <option value="자기계발비">자기계발비</option>
+          <option value="간식비">간식비</option>
+          <option value="유흥비">유흥비</option>
+          <option value="여행비">여행비</option>
+        </select>
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="submit">조회</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock content %}

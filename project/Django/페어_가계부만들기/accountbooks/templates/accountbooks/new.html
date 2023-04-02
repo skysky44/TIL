@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block style %}
+{% endblock style %}
+
+{% block content %}
+  <div class="container m-5">
+    <form action="{% url 'accountbooks:create' %}" method="POST">
+      {% csrf_token %}
+      <div class="row d-flex flex-column">
+        <div class="col-6">
+          <label for="note" class="form-label">내용</label>
+        </div>
+        <div class="col-6">
+          <input type="text" id="note" name="note" class="form-control">
+        </div>
+      </div>
+      <br>
+      <div class="row d-flex flex-column">
+        <div class="col-6">
+          <label for="category" class="form-label">분류</label>
+        </div>
+        <div class="col-6">
+          <select class="form-select" aria-label="Default select example" name="category">
+            <option selected>유형을 고르세요</option>
+            <option value="식비">식비</option>
+            <option value="교통비">교통비</option>
+            <option value="자기계발비">자기계발비</option>
+            <option value="간식비">간식비</option>
+            <option value="유흥비">유흥비</option>
+            <option value="여행비">여행비</option>
+          </select>
+        </div>
+      </div> 
+      <br>
+      <div class="row d-flex flex-column">
+        <div class="col-6">
+          <label for="amount" class="form-label">사용 금액</label>
+        </div>
+        <div class="col-6">
+          <input type="number" id="amount" name="amount" class="form-control">
+        </div>
+      </div>
+      <br>
+      <div class="row d-flex flex-column">
+        <div class="col-6">
+          <label for="date" class="form-label">사용 날짜</label>
+        </div>
+        <div class="col-6">
+          <input type="date" id="date" name="date" class="form-control">
+        </div>
+      </div>
+      <br>
+      <div class="row d-flex flex-column">
+        <div class="col-6">
+          <label for="description" class="form-label">메모</label>
+        </div>
+        <div class="col-6">
+          <textarea name="description" id="description" cols="42" rows="10" class="form-control"></textarea>
+        </div>
+      </div>
+      <div class="row d-flex flex-column">
+        <div class="offset-4 mt-3">
+          <button type="submit" class="border-3 btn btn btn-outline-primary mb-3">가계부 작성</button>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock content %}
