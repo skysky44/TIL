@@ -4,15 +4,19 @@
 {% endblock style %}
 
 {% block content %}
-  <h1>가계부 {{ accountbook.pk }}번</h1>
-  <h3>내용 - {{ accountbook.note }} </h3>
-  <h3>메모 - {{ accountbook.description }} </h3>
-  <h3>분류 - {{ accountbook.category }} </h3>
+<div class="contatiner p-5">
+  <a href="{% url 'accountbooks:index' %}">홈</a>
+  <a href="{% url 'accountbooks:edit' accountbook.pk %}">수정하기</a>
+  <a href="{% url 'accountbooks:copy' accountbook.pk %}">복사하기</a>
+  <a href="{% url 'accountbooks:delete' accountbook.pk %}">삭제하기</a>
+
+  <h3>번호 - {{ accountbook.pk }}</h3>
+  <h3>내용 - {{ accountbook.note }}</h3>
+  <h3>메모 - {{ accountbook.description }}</h3>
+  <h3>분류 - {{ accountbook.category }}</h3>
   <h3>사용금액 - {{ accountbook.amount }}</h3>
   <h3>사용날짜 - {{ accountbook.date }} </h3> 
+</div>
 
-  <a href="{% url 'accountbooks:edit' accountbook.pk %}">수정하기</a>
-  <a href="{% url 'accountbooks:delete' accountbook.pk %}">삭제하기</a>
-  <a href="{% url 'accountbooks:copy' accountbook.pk %}">복사하기</a>
-  <a href="{% url 'accountbooks:index' %}">홈</a>
+
 {% endblock content %}

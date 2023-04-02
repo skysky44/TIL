@@ -81,38 +81,27 @@ def copy(request, account_book_pk):
     return redirect('accountbooks:index')
 
 
-def select(request):
-    category = request.GET.get('category')
-    if category == '전체':
-        accountbooks = AccountBook.objects.all()
-    else:
-        accountbooks = AccountBook.objects.filter(
-            category=request.GET.get('category'))
-    context = {
-        'accountbooks': accountbooks,
-    }
-
-    return render(request, 'accountbooks/index.html', context)
+# 분류와 정렬을 한가지 함수 order로 해결 select 삭제
 
 
 def order(request):
-    order_by = request.GET.get('order_by', '')
-    # category = request.GET.get('category', '')
-    if order_by == '최신순':
-        accountbooks = AccountBook.objects.all().order_by('-date')
-    elif order_by == '사용금액순':
-        accountbooks = AccountBook.objects.all().order_by('-amount')
+    ord = request.GET.get('order_by', '')
+    category = request.GET.get('category', '')
 
-    # 분류가 지정된 상태에서 정렬하기 구현 안됨
+    if category == ('전체' or ''):
+        accountbooks = AccountBook.objects.all()
+    else:
+        accountbooks = AccountBook.objects.filter(category=category)
+    if ord == '최신순':
+        accountbooks = accountbooks.order_by('-date')
+    elif ord == '사용금액순':
+        accountbooks = accountbooks.order_by('-amount')
+    else:
+        pass
 
-    # if order_by == '최신순':
-    #     accountbooks = AccountBook.objects.filter(
-    #         category=category).order_by('-date')
-    # elif order_by == '사용금액순':
-    #     accountbooks = AccountBook.objects.filter(
-    #         category=category).order_by('-amount')
-    # else:
-    #     accountbooks = AccountBook.objects.all()
+    context = {
+        'accountbooks': accountbooks,
+    }
 
     context = {
         'accountbooks': accountbooks,
