@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block style %}
+{% endblock style %}
+
+{% block content %}
+  <div class="container m-5">
+    <h1 class ="m-5">
+      <a href="{% url 'accountbooks:new' %}">가계부 작성</a>
+    </h1>
+    <div class="d-flex justify-content-end">
+      <div class="btn-group">
+        <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          정렬
+        </button>
+          <ul class="dropdown-menu">
+            {% comment %} <li><a class="dropdown-item" href="{% url 'accountbooks:order1' account_category %}">번호</a></li> {% endcomment %}
+            <li><a class="dropdown-item" href="{% url 'accountbooks:order2' category %}">사용 금액</a></li>
+            {% comment %} <li><a class="dropdown-item" href="{% url 'accountbooks:order3' 식비 %}">사용 날짜</a></li> {% endcomment %}
+          </ul>
+      </div>
+    </div>
+    {% for select in accountbook_selects %}
+    <p><a href="{% url 'accountbooks:detail' select.pk %}">{{ select.pk }}</a> - {{ select.note }}</p>
+    {% endfor %}
+    <a href="{% url 'accountbooks:index' %}">뒤로 가기</a>
+  </div>
+{% endblock content %}
