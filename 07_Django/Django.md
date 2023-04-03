@@ -1101,3 +1101,178 @@ def update(request, pk):
 ## 참고
 - a태그는 get만 가능
 - 추후 REST API에서 효율적인 URL 구조 다룰 예정
+
+
+## Django 9일차
+### Form
+#### HTML form
+- 사용자로부터 form 요소를 통해 데이터를 받고 있으나 비정상적 혹은 악의적인 요청을 확인하지 않고 모두 수용중(유효성 검증 필요)
+#### 유효성 검사
+- 수집한 데이터가 정확하고 유효한지 확인하는 과정
+- 입력 값, 형식, 중복, 범위, 보안 등 고려
+- 이런 과정과 기능 제공 도구 필요
+
+#### Django Form
+- 사용자 입력 데이터를 수집하고, `처리 및 유효성 검증`을 수행하기 위한 도구
+- 유효성 검사를 `단순화, 자동화` 할 수 있는 기능 제공
+
+### Widgets
+- HTML 'input' element의 표현을 담당
+- Widget은 단순히 input 요소의 속성 및 출력 되는 부분을 변경하는 것
+- Widget 공식문서: https://docs.djangoproject.com/ko/3.2/ref/forms/widgets/#built-in-widgets
+
+```python
+class ArticledForm(forms.ModelForm):
+  # 위젯으로 input 디자인 변경. class 추가 하기.공식문서확인.
+    content = forms.CharField(widget=forms.Textarea)
+```
+
+### ModelForm
+- Form: 사용자 입력 데이터를 DB에 `저장하지 않을` 때(ex.로그인)
+- ModelForm: 사용자 입력데이터를 DB에 `저장해야 할` 때(ex.회원가입)
+- Meta에 model만 써도 되지만 표현(디자인) 하기 위해 widget 사용
+
+```python
+from django import forms
+from .models import Article
+
+# 일반 Form
+# class ArticledForm(forms.Form):
+#     title = forms.CharField(max_length=10)
+#     content = forms.CharField(widget=forms.Textarea)
+
+# ModelForm
+class ArticledForm(forms.ModelForm):
+    
+
+    class Meta:
+        model = Article
+        fields = '__all__'
+        # fields = ('content',)
+        # content만 출력
+        # exclude = ('title',)
+        # title 제외하고 출력
+
+    # 클래스 안에 클래스? Inner class 파이썬 문법이랑 아무상관 없고
+    # 그냥 django ModelForm의 구조가 이렇게 설계 되었을 뿐
+    # 그냥 modelform에 대한 추가 정보를 클래스 meta에 쓸 뿐
+    # form에 대한 추가 데이터(meta) 라고 생각하면 됨
+    # ModelForm의 정보를 작성 하는 곳
+
+```
+
+#### Meta class
+- ModelForm의 정보를 작성하는 곳
+- fields: 포함 하는 필드
+- exclude: 포함하지 않을 필드
+```python
+# articles/view.py
+    class Meta:
+        model = Article
+        fields = '__all__' # 전체 필드 선택
+        # fields = ('content',)
+        # content 필드만 출력
+        # exclude = ('title',)
+        # title 필드 제외하고 출력
+```
+
+#### is_valid
+- 여러 유효성 검사를 실행하고, 데이터가 유효한지 여부를 boolean으로 반환
+- 
+```python 
+# views.py 
+def create(request):
+    if request.method == 'POST':
+        form = ArticledForm(request.POST)
+        if form.is_valid():
+          # is_valid()가 True가 아니면 왜 통과 못한 지 정보를 담아서 form으로 내려 줌(context form으로 감)
+            article = form.save()
+            return redirect("articles:detail", article.pk)
+
+    else:
+        form = ArticledForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'articles/create.html', context)
+```
+
+#### save()
+- 데이터베이스 객체를 만들고 저장
+- 키워드 인자 instance 여부를 통해 생성할 지, 수정할 지를 결정
+- instance가 객체를 명시함(어떤 객체를 수정할지 알려줌)
+```python
+# create
+form = ArticledForm(request.POST)
+form.save()
+
+# update
+form = ArticledForm(request.POST, instance=article)
+# instance=article 차이
+form.save()
+```
+
+
+### 오늘 배운 내용 요약
+- Form과 ModelForm의 차이는 데이터 저장여부에 따라 사용
+- 기존에 배운 new와 create를 create하나의 로직으로 합치기
+- 기존에 배운 edit과 update를 update 하나의 로직으로 합치기
+  - if문으로 request.method가 GET일때와 POST일 때 구분
+
+```python
+#view.py
+
+# create
+def create(request):
+    # HTTP requests method POST라면
+    if request.method == 'POST':
+        form = ArticledForm(request.POST)
+        if form.is_valid():
+            article = form.save()
+            return redirect("articles:detail", article.pk)
+    # POST가 아니라면
+    else:
+        form = ArticledForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'articles/create.html', context)
+
+# create와 update 차이는 거의 instance=article 유무가 전부
+
+# update
+def update(request, pk):
+    article = Article.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = ArticledForm(request.POST, instance=article)
+        if form.is_valid():
+            article = form.save()
+            return redirect("articles:detail", article.pk)
+    else:
+        form = ArticledForm(instance=article)
+
+    context = {
+        'article': article,
+        'form': form,
+    }
+    return render(request, 'articles/update.html', context)
+```
+```html
+<!-- create.html -->
+<body>
+  <h1>CREATE</h1>
+  <form action="{% url 'articles:create' %}" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit">
+  </form>
+  <a href="{% url 'articles:index' %}">[BACK]</a>
+</body>
+```
+
+
+### 참고
+- 코드의 흐름에 따른 create 작성 순서
+  - if 말고 else부터 작성 > 템플릿 작성 하고 폼 만들고 > 그리고 나서 if 문 작성
+- {{ form.as_p }} :  form을 p태그로 나누어서 보여줌 
