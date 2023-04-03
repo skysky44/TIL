@@ -1,0 +1,17 @@
+{% extends 'todos/base.html' %}
+
+{% block content %}
+
+<div class="container">
+  <h1>CREATE</h1>
+<a href="{% url 'todos:index'%}">[BACK]</a>
+  <form action="{% url 'todos:create' %}" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit">
+  </form>
+
+
+</div>
+
+{% endblock content %}

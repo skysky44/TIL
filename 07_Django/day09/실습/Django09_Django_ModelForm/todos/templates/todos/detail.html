@@ -1,0 +1,21 @@
+{% extends 'todos/base.html' %}
+
+{% block content %}
+<div class="container">
+  <h1>DETAIL</h1>
+  <a href="{% url 'todos:update' todo.pk %}">[UPDATE]</a>
+  <a href="{% url 'todos:index' %}">[BACK]</a>
+  <form action="{% url 'todos:delete' todo.pk %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="[DELETE]">
+  </form>
+  
+  
+  <h3>제목: {{ todo.title }}</h3>
+  <h3>내용: {{ todo.content }}</h3>
+  <h3>완료상태: {{ todo.completed }}</h3>
+  <h3>마감기한: {{ todo.deadline }}</h3>
+  
+  {% endblock content %}
+
+</div>

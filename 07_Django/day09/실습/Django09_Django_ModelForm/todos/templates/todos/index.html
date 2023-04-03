@@ -1,0 +1,14 @@
+{% extends 'todos/base.html' %}
+
+{% block content %}
+<div class="container">
+  <a href="{% url 'todos:create' %}">[CREATE]</a>
+  {% for todo in todos %}
+  
+  <p><a href="{% url 'todos:detail' todo.pk %}"> 제목: {{ todo.title }}  </a></p>
+  <p>내용: {{ todo.content }}</p>
+  <hr>
+  {% endfor %}
+</div>
+
+{% endblock content %}
