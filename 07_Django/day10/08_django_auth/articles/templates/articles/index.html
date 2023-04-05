@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h3>안녕하세요, {{ user }} 님!</h3>
+  {% comment %} Django 기능으로 user 바로 사용 가능 {% endcomment %}
+
+  <h1>Articles</h1>
+  <a href="{% url 'accounts:login' %}">[Login]</a>
+
+  <form action="{% url 'accounts:logout'%}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Logout">
+  </form>
+
+
+  <a href="{% url 'articles:create' %}">[CREATE]</a>
+  {% for article in articles %}
+    <p>제목: 
+      <a href="{% url 'articles:detail' article.pk %}">{{ article.title }}</a>
+    </p>
+    <p>내용: {{ article.content }}</p>
+    <hr>
+  {% endfor %}
+</body>
+</html>
