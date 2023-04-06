@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+  <p>글 번호 - {{ post.pk }}</p>
+  <p>글 제목 - {{ post.title }}</p>
+  <p>글 내용 - {{ post.content }}</p>
+  <p>글 카테고리 - {{ post.category }}</p>
+  <a href="{% url 'posts:update' post.pk %}">글 수정</a>
+  <form action="{% url 'posts:delete' post.pk %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="글 삭제">
+  </form>
+</div>
+
+{% endblock content %}

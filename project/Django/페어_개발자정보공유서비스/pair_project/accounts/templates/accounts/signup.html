@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+  <div class="container col-5 offset-3">
+    <h1 class="my-4">회원가입</h1>
+    <form action="{% url 'accounts:signup' %}" method="POST">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="mb-3">
+        <label for="{{ field.auto_id }}" class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {{ field.help_text }}
+      </div>
+      {% endfor %} 
+      <input type="submit" value="회원가입">
+    </form>
+  </div>
+  
+</div>
+  
+{% endblock content %}
+
+{% block script %}
+<script>
+  const usernameInput = document.querySelector('[name="username"]')
+  const emailInput = document.querySelector('[name="email"]')
+  const firstNameInput = document.querySelector('[name="first_name"]')
+  const lastNameInput = document.querySelector('[name="last_name"]')
+  const birthdayInput = document.querySelector('[name="birthday"]')
+  const password1Input = document.querySelector('[name="password1"]')
+  const password2Input = document.querySelector('[name="password2"]')
+</script>
+{% endblock script %}
+
