@@ -6,7 +6,9 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 def index(request):
     posts = Post.objects.all()
+    subject = '모든 글'
     context = {
+        'subject': subject,
         'posts': posts,
     }
     return render(request, 'posts/index.html', context)
@@ -63,6 +65,7 @@ def update(request, pk):
 def category(request, subject):
     posts = Post.objects.filter(category=subject)
     context = {
+        'subject': subject,
         'posts': posts,
     }
     return render(request, 'posts/index.html', context)

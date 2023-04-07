@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% for post in posts %}
-<p>글번호 - <a href="{% url 'posts:detail' post.pk %}">{{ post.pk }}</a> / 카테고리 - {{ post.category }}</p>
-{% endfor %}
-{% endblock content %}
+<h2 class="mb-5">{{ subject }}</h2>
+<div>
+  {% for post in posts %}
+  <a href="{% url 'posts:detail' post.pk %}" class="text-decoration-none text-black">
+    <p><span class="badge bg-secondary" style="min-width: 50px;">{{ post.category }}</span> {{ post.pk }}. {{ post.title }} </p>
+  </a> 
+  <hr>
+  {% endfor %}
+  {% endblock content %}
+</div>

@@ -1,9 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<form action="{% url 'posts:update' post.pk %}" method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <input type="submit" value="글 수정">
-</form>
+  <div style="width: 835px;">
+    <h1 class="mb-4">글 수정</h1>
+    <form action="{% url 'posts:update' post.pk %}" method="POST">
+      {% csrf_token %}
+      {{ form.media }}
+      {% for field in form %}
+      <div class="mb-3">
+        <label for="{{ field.auto_id }}" class="form-label">{{ field.label }}</label>
+        {{ field }}
+      </div>
+      {% endfor %} 
+      <div class="d-flex justify-content-end">
+        <input class="btn btn-secondary mt-5" type="submit" value="수정">
+      </div>
+    </form>
+  </div>
 {% endblock content %}

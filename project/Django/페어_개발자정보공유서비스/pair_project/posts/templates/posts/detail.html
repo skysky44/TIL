@@ -1,16 +1,26 @@
 {% extends 'base.html' %}
 
+{% block style %}
+<style>
+  #content {
+    min-height: 300px;
+  }
+</style>
+{% endblock style %}
+
 {% block content %}
 <div>
-  <p>글 번호 - {{ post.pk }}</p>
-  <p>글 제목 - {{ post.title }}</p>
-  <p>글 내용 - {{ post.content }}</p>
-  <p>글 카테고리 - {{ post.category }}</p>
-  <a href="{% url 'posts:update' post.pk %}">글 수정</a>
-  <form action="{% url 'posts:delete' post.pk %}" method="POST">
-    {% csrf_token %}
-    <input type="submit" value="글 삭제">
-  </form>
+  <h2>{{ post.pk }}번째 글 - {{ post.title }}</h2>
+  <hr>
+  <p>카테고리 - {{ post.category }}</p>
+  <div id="content">{{ post.content|safe }}</div>
+  <div class="d-flex justify-content-end">
+    <a href="{% url 'posts:update' post.pk %}" class="me-3 btn btn-secondary">수정</a>
+    <form action="{% url 'posts:delete' post.pk %}" method="POST">
+      {% csrf_token %}
+      <input class="btn btn-outline-danger" type="submit" value="삭제">
+    </form>
+  </div>
 </div>
 
 {% endblock content %}
