@@ -1,0 +1,55 @@
+{% extends 'albums/base.html' %}
+
+{% block content %}
+{% load static %}
+
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid d-flex">
+      <img class="col-1" src="{% static 'albums/logo.svg' %}" alt="logo">
+
+    <!-- Button trigger modal -->
+<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  이미지공유
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">이미지 공유 폼</h1>
+
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'albums:create' %}" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ form.as_p }}
+
+        </div>
+        <div class="modal-footer">
+
+          <button type="submit" class="btn btn-danger">공유하기</button>
+        </div>
+      </form>
+      
+    </div>
+  </div>
+</div>
+  </div>
+</nav>
+
+<div class="d-flex row p-2">
+  {% for album in albums %}
+
+  <div class="card col-3 m-2" style="width: 18rem;">
+    <img src="{{album.image.url}}" class="card-img-top" alt="img">
+    <div class="card-body">
+      <p class="card-text">{{ album.content }}.</p>
+    </div>
+  </div>
+
+  {% endfor %}
+
+</div>
+{% endblock content %}
+

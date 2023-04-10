@@ -1,0 +1,33 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  {% comment %} 이미지 없으면 에러나기 때문에 if문 또는 기본 이미지를 넣어주기 {% endcomment %}
+  {% if article.image %}
+  <img src="{{ article.image.url }}" alt="img">
+  {% else %}
+  <img src="{% static 'articles/no-image.jpg' %}" alt="no_image">
+  {% endif %}
+
+
+  <h1>Detail</h1>
+  <p>글 번호: {{ article.pk }}</p>
+  <p>제목: {{ article.title }}</p>
+  <p>내용: {{ article.content }}</p>
+  <p>작성일: {{ article.created_at }}</p>
+  <p>수정일: {{ article.updated_at }}</p>
+  <form action="{% url 'articles:delete' article.pk  %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="삭제">
+  </form>
+  <a href="{% url 'articles:update' article.pk %}">[UPDATE]</a>
+  <a href="{% url 'articles:index' %}">[back]</a>
+</body>
+</html>
