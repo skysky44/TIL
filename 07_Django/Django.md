@@ -1756,3 +1756,194 @@ def logout(request):
     auth_logout(request)
     return redirect('articles:index')
 ```
+
+## Django 12일차
+
+### Static Files
+- 서버 측에서 변경되지 않고 고정적으로 제공되는 파일(이미지, JS, CSS 파일 등)
+- 정적 파일을 제공하기 위한 경로(URL)가 있어야 함
+
+### Static files 제공하기
+- 경로에 따른 Static file 제공하기
+  - 기본 경로: app/static/
+  - 추가 경로: STATICFILES_DIRS
+
+#### 기본 경로에 static file 제공하기
+```html
+<!--1. articles/static/articles/ 경로에 이미지 파일 배치 -->
+
+<!-- 2. static tag 사용 이미지 파일 url 제공 -->
+<!-- articles/index.html -->
+<!-- 2-1 static 로드 먼저 하기 -->
+{% load static %}
+<!-- 2-2 static에 경로 입력 -->
+<img src="{% static 'articles/sample-1.png' %}" alt="img">
+```
+
+- STATIC_URL
+  - URL + STATIC_URL + 정적파일 경로
+```python
+# settings.py
+STATIC_URL = '/static/'
+# 샘플이미지 제공하기 위해 만든 URL 주소 
+```
+
+#### 추가 경로 static file 제공하기
+- 추가 경로에 이미지 파일 배치
+1. 경로 설정하기(최상단아래 static)
+```python
+# settings.py
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+```
+2. 최상단 아래 static 폴더 안에 이미지 파일 저장
+
+3. static tag 사용해 이미지 파일 url 제공
+```html
+<!-- articles/index.html -->
+  <img src="{% static 'sample-2.png' %}" alt="img">
+```
+
+- STATICFILES_DIRS : 정적 파일의 기본 경로 외에 추가적인 경로 목록을 정의하는 리스트
+
+### Media Files
+- `사용자`가 웹에서 `업로드`하는 정적파일(user-uploaded)
+- ImageField(): 이미지 업로드에 사용하는 모델 필드
+- 이미지 객체가 직접 저장되는 것이 아닌 `이미지 파일의 경로 문자열`이 DB에 저장
+
+#### 미디어 파일 제공하기 전 준비
+1. settings.py에 MEDIA_ROOT, MEDIA_URL 설정
+- MEDIA_ROOT: 미디어 파일들이 위치하는 디렉토리의 절대 경로
+- MEDIA_URL: MEDIA_ROOT에서 제공되는 미디어 파일에 대한 주소를 생성(STATIC_URL과 동일한 역할)
+```python
+#  settings.py
+# 미디어 파일이 실제 어디로 저장되는지 결정(물리적 주소)
+MEDIA_ROOT = BASE_DIR / 'media'
+# 경로 여기까지만 가능하고 추가는 모델필드에서 추가 가능
+
+# 사용자에 보여지는 주소(제공 하는 주소)
+MEDIA_URL = '/media/'
+```
+
+
+2. 작성한 MEDIA_ROOT와 MEDIA_URL에 대한 url 지정
+```python
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('articles/', include('articles.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# 미디어 파일. 응답할 url 추가(실제 URL, 물리적 위치)
+```
+
+### 이미지 업로드 및 제공하기
+#### 이미지 업로드
+1. blank=True 속성 저장해 빈 문자열 저장되도록 설정(사진은 선택사항)
+```python
+# articles/models.py
+
+class Article(models.Model):
+    title = models.CharField(max_length=10)
+    content = models.TextField()
+    # MEDIA_ROOT 이후의 추가 경로를 설정 => upload_to='images/'
+    # 날짜폴더로 넣고 싶을때 upload_to='%Y/%m/%d'
+    image = models.ImageField(blank=True, upload_to='%Y/%m/%d')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+```
+2. pillow 설치 > migration 진행 > requirements.txt 작성
+```bash
+$ pip install pillow 
+# ImageField 사용위해 pillow 반드시 필요
+$ python manage.py makemigrations
+$ python manage.py migrate
+
+$ pip freeze > requirements.txt
+```
+3. form 요소의 enctype 속성 추가 enctype="multipart/form-data"
+```html
+  <h1>Create</h1>
+  <form action="{% url 'articles:create' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit">
+  </form>
+  ```
+
+4. view 함수에서 업로드 파일에 대한 추가 코드 작성
+```python
+def create(request):
+    if request.method == 'POST':
+        print(request.FILES)
+        form = ArticleForm(request.POST, request.FILES) #이미지 파일 여기 들어 있음
+        # ...
+```
+5. 업로드 결과 DB 확인(파일 자체 아닌 `경로`가 저장 되는 것)
+
+#### 이미지 제공 하기(업로드한 이미지를 보여줌)
+1. url 속성을 통해 업로드 파일의 경로 값을 얻을 수 있음
+```html
+<!-- articles/detail.html -->
+ <img src="{{ article.image.url }}" alt="img">
+```
+- article.image: 업로드 파일의 이름
+- article.image.url : 업로드 파일의 경로
+
+2. 출력 확인 및 MEDIA_URL 확인
+
+3. 이미지 업로드하지 않은 게시물은 detail 템플릿을 출력할 수 없는 문제 발생
+- 이미지 데이터 있는 경우만 출력 또는 대체 이미지 출력
+```html
+<!-- articles/detail.html -->
+  {% if article.image %}
+  <img src="{{ article.image.url }}" alt="img">
+  {% else %}
+  <img src="{% static 'articles/no-image.jpg' %}" alt="no_image">
+  {% endif %}
+```
+
+#### 업로드 이미지 수정
+1. 수정페이지 form 요소에 enctype 속성 추가
+```html
+<!-- articles/update.html -->
+  <h1>Update</h1>
+  <form action="{% url 'articles:update' article.pk %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="UPDATE">
+  </form>
+```
+2. view 함수에서 업로드 파일에 대한 추가 코드 작성
+```python
+# articles/view.py
+def update(request, article_pk):
+    article = Article.objects.get(pk=article_pk)
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, request.FILES, instance=article)
+        # ...
+```
+
+### 참고
+- ImageField()의 upload_to 인자를 사용해 미디어 파일 추가 경로 설정
+```python
+  # 1. MEDIA_ROOT 이후의 추가 경로를 설정 => upload_to='images/'
+  image = models.ImageField(blank=True, upload_to='images/')
+  # 2. 날짜폴더로 넣고 싶을때 upload_to='%Y/%m/%d'
+  image = models.ImageField(blank=True, upload_to='%Y/%m/%d')
+  # 3. 
+  def articles_image_path(instance, filename):
+    return f'image/{instance.user.username}/{filename}'
+
+  image = models.ImageField(blank=True, upload_to=articles_image_path)
+```
+
+- 사용자가 업로드하는 파일: 미디어 파일
+- 스태틱 파일 : 미리 배치 되어있는 파일
+- 스태틱 파일이 더 큰 개념
+
+- 이미지 파일 원본 그대로 안하고 Django 이미지 리사이징도 가능. 라이브러리 사용
+방법은 여러가지 다양
