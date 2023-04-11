@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>Detail</h1>
+  <p>글 번호: {{ review.pk }}</p>
+  <p>리뷰 제목: {{ review.title }}</p>
+  <p>리뷰 내용: {{ review.content }}</p>
+  <p>리뷰 영화: {{ review.movie }}</p>
+  {% if review.image %}
+  <img style="width: 100px" src="{{ review.image.url }}" alt="img">
+  {% endif %}
+  <br>
+  <a href="{% url 'reviews:index' %}">[back]</a>
+  <hr>
+  <h4>댓글 목록</h4>
+  <p>
+    총 댓글 수: {{ comments|length }}
+    {% comment %} {{ count }}
+    {{ review.comment_set.all|length }} {% endcomment %}
+  </p>
+  <ul>
+    {% for comment in comments %}
+
+    <li>
+      {{ comment.content }}
+      <form action="{% url 'reviews:comment_delete' review.pk comment.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="삭제">
+      </form> 
+    </li>
+    {% empty %}
+    <p>댓글이 없어요..</p>
+    {% endfor %}
+  </ul>
+  <hr>
+  <form action="{% url 'reviews:comment_create' review.pk %}" method = "POST">
+    {% csrf_token %}
+    {{ comment_form }}
+    <input type="submit">
+  </form>
+</body>
+</html>
