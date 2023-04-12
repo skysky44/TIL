@@ -1947,3 +1947,240 @@ def update(request, article_pk):
 
 - 이미지 파일 원본 그대로 안하고 Django 이미지 리사이징도 가능. 라이브러리 사용
 방법은 여러가지 다양
+
+
+## Django 13일차
+
+### Comment & Article
+- many to one relationships (N:1 or 1:N): 한 테이블의 0개 이상의 레코드가 다른 테이블의 레코드 한 개와 관련된 관계
+- Comment(N) - Article(1): 0개 이상의 댓글을 1개의 개시글에 작성될 수 있다.
+- 두 모델의 관계
+![image](https://user-images.githubusercontent.com/110805149/231139623-0f9fb757-2481-40fa-aab5-0c7aa1191de9.png)
+
+- ForeignKey(): django에서 N:1 관계 설정 모델 필드
+
+#### Comment 모델 정의
+```python
+# articles/models.py
+class Comment(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    content = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+```
+- ForeignKey() 클래스의 인스턴스 이름은 참조하는 모델 클래스 이름의 단수형(소문자)으로 작성 권장
+- ForeignKey 클래스를 작성하는 위치와 관계 없이 필드 마지막에 생성됨
+- on_delete: 참조하던 상대방 대상이 없어지면? 폭포처럼 떨어져서 같이 삭제(on_delete=models.CASCADE)
+
+#### 댓글 생성 연습
+
+#### 역참조
+- 나를 참조하는 테이블(나를 외래 키로 지정한)을 참조하는 것
+- N:1 관계에서는 1이 N을 참조하는 상황
+- 하지만 Article에는 Comment를 참조할 어떠한 필드도 없다.
+
+- `article.comment_set.all()`: 모델인스턴스.related manager.QuerySet API
+
+- related manager : N:1 혹은 M:N 관계에서 역참조 시에 사용하는 manager(objects라는 매니저를 통해 queryset api를 사용 했던 것처럼 related manager를 통해 queryset api를 사용할 수 있게 됨)
+- related manager가 필요한 이유
+  - article.comment 형식으로는 댓글 참조 할 수 없음
+  - 실제 Article 클래스에는 Comment와의 어떠한 관계도 작성되어 있지 않기 때문
+  - 대신 Django가 역참조 할 수 있는 'comment_set' manager를 자동으로 생성해 article.comment_set 형태로  댁슬 객체를 참조할 수 있음
+  - N:1 관계에서 생성되는 Related manager의 이름은 참조하는 `모델명_set`이름 규칙으로 만들어짐
+
+  ```python
+  comments = article.comment_set.all()
+
+  for comment in comments:
+    print(comment.content)
+  ```
+
+### 댓글 생성, 읽기, 삭제 등
+#### Comment CREATE
+1. 사용자로부터 댓글 데이터를 입력 받기 위한 CommentForm 작성
+
+```python
+# articles/forms.py
+from django import forms
+from .models import Comment
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = '__all__' # 수정 필요!! 아래!
+```
+
+2. detail 페이지에서  CommentForm 출력(템플릿)
+```html
+<!-- articles/detail.html -->
+<form action="{% url 'articles:comment_create' article.pk %}" method = "POST">
+    {% csrf_token %}
+    {{ comment_form }}
+    <input type="submit">
+  </form>
+```
+- 그냥 출력하면 Comment 클래스의  외래키 필드 article 또한 데이터 입력이 필요하기 때문에 출력되어 나옴
+- 하지만 외래키 필드는 `사용자의 입력으로 받는 것이 아니라 view 함수 내에서 받아 별도로 처리되어 저장`되어야함.
+
+3. detail 페이지에서 CommentForm 출력(템플릿)
+```python
+# articles/forms.py
+from django import forms
+from .models import Comment
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('content',) # 여기를 바꿔줌
+```
+- 출력에서 제외된 외래키는 detail 페이지의 url의 pk값에서 가져올 수 있음
+- 댓글의 외래 키 데이터 =  게시글의 pk 값
+
+4. url 설정
+```python
+# articles/urls.py
+urlpatterns = [
+    path('<int:article_pk>/comments/', views.comment_create, name='comment_create'),
+]
+```
+5. view 설정
+```python
+# articles/views.py
+def comment_create(request, article_pk):
+    # 몇 번 게시글인지 조회
+    article = Article.objects.get(pk=article_pk)
+    # 댓글 데이터를 받아서
+    comment_form = CommentForm(request.POST)
+    if comment_form.is_valid():
+        comment = comment_form.save(commit=False)
+        # 커밋 잠시 멈춤: 인스턴스는 만들어주는데 DB에 저장은 안함
+        comment.article = article
+        # 인스턴스 채우고 잠시 저장 미뤘다가 id 채우고 저장하기
+        comment.save()
+        # commit=True가 기본값
+```
+- save(commit=False) : DB에 저장하지 않고 인스턴스만 반환
+
+6. templates 설정
+```html
+<!-- articles/detail.html -->
+<form action="{% url 'articles:comment_create' article.pk %}" method = "POST">
+    {% csrf_token %}
+    {{ comment_form }}
+    <input type="submit">
+  </form>
+```
+
+#### Comment READ
+1. 전체 댓글 출력(view 함수)
+```python
+# articles/view.py
+def detail(request, pk):
+    comment_form = CommentForm()
+    article = Article.objects.get(pk=pk)
+    # 해당 게시글에 작성된 모든 댓글을 조회(역참조)
+    comments = article.comment_set.all()
+    context = {
+        'article': article,
+        'comment_form': comment_form,
+        'comments': comments,
+    }
+    return render(request, 'articles/detail.html', context)
+```
+2. 전체 댓글 출력(템플릿)
+```html
+<!--  articles/detail.html -->
+  <h4>댓글 목록</h4>
+  <ul>
+    {% for comment in comments %}
+    <li>
+      {{ comment.content }}
+    </li>
+    {% empty %}
+    <p>댓글이 없어요..</p>
+    {% endfor %}
+  </ul>
+```
+
+#### Comment DELETE
+1. 댓글 삭제 url 작성
+```python
+#  articles?urls.py
+app_name = 'articles'
+urlpatterns = [path('<int:article_pk>/comments/<int:comment_pk>/delete/', views.comment_delete, name='comment_delete'),
+]
+```
+2. 댓글 삭제 view 함수 작성
+```python
+# articles/views.py
+def comment_delete(request, article_pk, comment_pk):
+    # 삭제할 댓글을 조회
+    comment = Comment.objects.get(pk=comment_pk)
+    # article_pk = comment.article.pk도 가능, 권장x
+    comment.delete()
+    return redirect('articles:detail', article_pk)
+```
+
+3. 댓글 삭제 버튼 작성
+```html
+<!-- articles/detail.html -->
+  <h4>댓글 목록</h4>
+  <ul>
+    {% for comment in comments %}
+
+    <li>
+      {{ comment.content }}
+      <!-- 댓글 삭제 버튼 -->
+      <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="삭제">
+      </form>
+    </li>
+      {% endfor %}
+  </ul>
+```
+
+### 참고
+- 댓글 개수 출력 하기
+  - DTL Filter - length 사용
+  ```html
+  <!-- 둘 중 하나 선택 사용 -->
+  {{ comments|length }}
+
+  {{ article.comment_set.all|length}}
+  ```
+  - QuerysetAPI - count() 사용
+    ```html
+  {{ article.comment_set.count }}
+
+  ```
+
+- 댓글 없는 경우 대체 컨텐츠 출력
+  - DTL tag-for empty 사용: for 문 안에 empty
+```html
+<!--  articles/detail.html -->
+  <h4>댓글 목록</h4>
+  <ul>
+    {% for comment in comments %}
+
+    <li>
+      {{ comment.content }}
+    </li>
+    <!-- empty 사용하면 댓글 없을 때 대체 해줌 -->
+    {% empty %}
+    <p>댓글이 없어요..</p>
+    {% endfor %}
+  </ul>
+```
+- 댓글 수정 구현하지 않는 이유
+    - 일반적으로 수정 페이지 이동 하지않고 댓글 작성 form 부분만 변경되어 수정함
+    - 페이지 일부영역만 업데이트 하는 것은 JavaScript의 영역
+
+- 새로 작성한 Comment 모델을 admin site에 등록
+```python
+# articles/admin.py
+from .models import Comment
+
+admin.site.register(Comment)
+```
