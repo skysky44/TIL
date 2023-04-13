@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ user }}님의 프로필 페이지</h2>
+
+<a href="{% url 'reviews:index' %}">뒤로 가기</a>
+<hr>
+
+<h3>회원 정보</h3>
+<p>username - {{ user }}</p>
+<p>email - {{ user.email }}</p>
+<hr>
+
+<h3>작성한 후기 목록</h3>
+{% for review in reviews %}
+  <p>
+    <p>후기 번호 -
+      {{ review.pk }}
+    </p>
+    <p>
+      영화 이름 -
+      {{review.movie}}
+    </p>
+    <p>
+        <a href="#">[detail]</a>
+    </p>
+  </p>
+  {% comment %} <a href="{% url 'reviews:detail' review.pk %}">[detail]</a> {% endcomment %}
+  <hr>
+{% endfor %}
+
+
+{% endblock content %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Detail</h1>
+  <p class="rp">작성자 - {{ review.user }}</p>
+  <p>후기 번호: {{ review.pk }}</p>
+  <p>후기 제목: {{ review.title }}</p>
+  <p>후기 내용: {{ review.content }}</p>
+  <p>영화 이름: {{ review.movie }}</p>
+
+
+  {% if request.user == review.user %}
+    <a href="{% url 'reviews:update' review.pk %}">[UPDATE]</a>
+    <br><br>
+    <form action="{% url 'reviews:delete' review.pk  %}" method="POST">
+      {% csrf_token %}
+      <input type="submit" value="삭제">
+    </form>
+    <br>
+  {% endif %}
+  <a href="{% url 'reviews:index' %}">[back]</a>
+  <hr>
+
+
+{% endblock content %}
+
