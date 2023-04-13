@@ -2184,3 +2184,266 @@ from .models import Comment
 
 admin.site.register(Comment)
 ```
+
+
+## Django 14일차
+### Many to one relationships 2
+- Article(N) - User(1) : 0개 이상의 게시글을 1개 회원에 의해 작성 될 수 있음
+- Comment(N) - User(1) : 0개 이상의 댓글은 1개의 회원에 의해 작성 될 수 있음
+- 외래키는 N쪽이 들고 있다.
+
+### Article & User
+- User 외래키 정의
+```python
+# from accounts.models import User 비추천: 직접 참조할 수 있지만. 장고에서 간접 참조 함수 제공 하고 권장
+# ​get_user_model "현재 프로젝트에 활성화"된 "User 객체"를 반환해주는 함수
+# 다른 이름으로 상속 받아서 custom 해서 재정의 부분만 덮어씌움 accounts forms 참고
+# user model은 추가적으로 생각해야할 것 있음
+
+# 이전에 배웠던 get_user_model 함수 사용(models.py에서는 사용하지 않음)
+# from django.contrib.auth import get_user_model
+
+# settings.py 에 AUTH_USER_MODEL = 'accounts.User' => settings.AUTH_USER_MODEL 이거 가져다 쓰는건데.. 이거는 문자열이다 객체 아니다
+
+# Django 내부 실행 원리(순서).. 나중에 user가 만들어졌을 때 문자열로 참조하게 함.그래야 정상 순서. user객체 사용하면 에러가 발생함.
+
+# 유저 모델 참조 방법 2가지 get_user_model() 과 settings.AUTH_USER_MODEL 2가지
+# 반환 되는 타입이 다름. 
+# get_user_model() vs settings.AUTH_USER_MODEL /객체 vs 문자열/ models.py가 아닌 모든 곳에서 참조할 때 사용 vs models.py 모델 필드에서 참조할 때 사용
+
+# models.py에서 User를 참조할땨만 다음과 같이 참조한다.
+from django.conf import settings
+
+# 마이그레이션 하면.. user default 기본값 설정하라고 나옴
+
+# Create your models here.
+class Article(models.Model):
+    # user 소문자 + 단수형
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    title = models.CharField(max_length=10)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    # # Article 클래스의 출력을 객체가 아니라 타이틀로 바꿔줌
+    # def __str__(self):
+    #     return self.title
+```
+
+#### User 모델을 참조하는 2가지 방법
+##### get_user_model()
+- 반환값 'User Object'(객체)
+- models.py가 아닌 다른 모든 곳에서 참조할 때 사용
+
+##### settings.AUTH_USER_MODEL
+- 반환값 'accounts.User'(문자열)
+- models.py의 모델 필드에서 참조할 때 사용
+
+##### Migrations 진행
+- 모든 컬럼은 NOT NULL 제약조건이 있어서 데이터 없이 새로추가 되는 user_id가 생성 되지 않음
+- 기본값을 어떻게 할 것인지 1을 입력하고 enter 진행
+- user_id에 어떤 데이터 넣을 것인지 1을 입력(임의로 user_id 1 입력)
+- DB 확인
+
+#### Article CREATE
+1. ArticleForm 출력 확인
+- User를 입력 폼에서 임의로 입력 하게 출력 됨
+
+2. ArticleForm 출력 필드 수정
+```python
+# articles/forms.py
+class ArticleForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        fields = ('title', 'content',) # 여기를 '__all__'에서 수정(User_id가 안보이도록)
+```
+3. 게시글 작성 시 User_id 필드 데이터 누락되어 에러 발생
+- IntegrityError ~~ NOT NULL
+
+4. 게시글 작성 시 작성자 정보가 함께 저장 될 수 있도록 save의 commit 옵션 활용
+```python
+# articles/views.py
+@login_required
+def create(request):
+    if request.method == 'POST':
+        form = ArticleForm(request.POST)
+        if form.is_valid():
+            article = form.save(commit=False) # 일시정지
+            article.user = request.user
+            # article의 user필드에 request의 user 저장
+            article.save()
+            return redirect('articles:detail', article.pk)
+    else:
+        form = ArticleForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'articles/create.html', context)
+```
+
+5. 게시글 작성후 테이블 확인
+
+
+#### Article READ
+1. index 템플릿과 detail 템플릿 에서 각 게시글의 작성자 출력 및 확인
+
+```html
+{% for article in articles %}
+  {% comment %} <p>작성자: {{ article.user.username }}</p> 둘 다 됨. AbstractUser에 username 출력하도록 정의 되어있기때문에. 원래대로면 user까지 썼을때 user object 나와야됨 {% endcomment %}
+  <p>작성자: {{ article.user }}</p> 
+
+  <p>제목: 
+    <a href="{% url 'articles:detail' article.pk %}">{{ article.title }}</a>
+  </p>
+  <p>내용: {{ article.content }}</p>
+  <hr>
+{% endfor %}
+```
+
+2. index 템플릿과 detail 템플릿 에서 각 게시글의 작성자 출력 및 확인
+
+#### Article UPDATE
+1. 수정을 요청 하려는 사람과 게시글을 작성한 사람을 비교하여 본인의 게시글만 수정하기
+```python
+# articles/view.py
+@login_required # 막는 것뿐 아니라 로그인 페이지로 리다이렉트
+def update(request, article_pk):
+    article = Article.objects.get(pk=article_pk)
+    if request.user == article.user:
+    # 현재 수정을 진행 하려는 유저 vs 글 작성자 비교
+        if request.method == 'POST':
+            form = ArticleForm(request.POST, instance=article)
+            if form.is_valid():
+                form.save()
+                return redirect('articles:detail', article.pk)
+        else:
+            form = ArticleForm(instance=article)
+    # 비교한 유저와 작성자가 다르면 index로 리다이렉트
+    else:
+        return redirect('articles:index')
+    context = {
+        'article': article,
+        'form': form,
+    }
+    return render(request, 'articles/update.html', context)
+```
+
+2. 해당 게시글 작성자가 아니라면, 수정/ 삭제 버튼 출력 안하기
+```html
+  {% if  request.user == article.user %}
+  <form action="{% url 'articles:delete' article.pk  %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="삭제">
+  </form>
+  <a href="{% url 'articles:update' article.pk %}">[UPDATE]</a>
+    
+  {% endif %}
+```
+
+#### Article DELETE
+- 삭제 요청하는 사람과 게시글 작성한 사람 비교하여 본인만 삭제 가능하도록 함
+```python
+# articles/view.py
+@login_required
+def delete(request, article_pk):
+    article = Article.objects.get(pk=article_pk)
+    if request.user == article.user: #본인만 삭제 가능
+        article.delete()
+
+    return redirect('articles:index')
+```
+
+### Comment & User
+- User 외래키 정의
+```python
+# articles/models.py
+class Comment(models.Model):
+    # 외래 키 필드
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    content = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+```
+
+#### Migration 진행
+1. 진행 위에서 Article과 User모델 한 내용 반복
+2. DB 확인
+
+#### Comment CREATE
+1. 댓글 작성시 user_id 필드 데이터 누락 에러 발생
+- IntegrityError~~NOT NULL ~ user_id
+
+2. 댓글 작성 시 작성자 정보가 함께 저장 되도록 save의 commit 옵션 활용
+```python
+@login_required
+def comment_create(request, article_pk):
+    # 몇 번 게시글인지 조회
+    article = Article.objects.get(pk=article_pk)
+    # 댓글 데이터를 받아서
+    comment_form = CommentForm(request.POST)
+    # 유효성 검증
+    if comment_form.is_valid():
+        comment = comment_form.save(commit=False)
+        comment.article = article
+        comment.user = request.user # 유저 추가
+        comment.save()
+```
+3. DB 테이블 확인
+
+#### Comment READ 
+- detail 템플릿에서 각 댓글의 작성자 출력 및 확인
+```html
+<!-- articles/detail.html -->
+    {% for comment in comments %}
+
+    <li>
+      {% comment %} 그냥 user까지만도 가능 {% endcomment %}
+      {{ comment.user.username }} - {{ comment.content }}
+      <!-- 위에 추가 -->
+      {% if request.user == comment.user  %}
+        <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="POST">
+          {% csrf_token %}
+          <input type="submit" value="삭제">
+        </form>
+      {% endif %}
+```
+
+#### Comment DELETE
+1. 삭제를 요청하는 사람과 댓글 작성자 비교하여 본인 댓글만 삭제 할 수 있도록
+```python
+@login_required
+def comment_delete(request, article_pk, comment_pk):
+    # 삭제할 댓글을 조회
+    comment = Comment.objects.get(pk=comment_pk)
+    # article_pk = comment.article.pk 도 가능
+    
+    # 댓글 삭제를 요청하는자 vs 댓글 작성자 
+    if request.user == comment.user: 
+        # 댓글 삭제
+        comment.delete()
+    return redirect('articles:detail', article_pk)
+```
+
+2. 해당 댓글 작성자가 아니라면, 댓글 삭제 버튼을 출력하지 않도록 함
+```html
+<!-- articles/detail.html -->
+    <li>
+      {{ comment.user.username }} - {{ comment.content }}
+      {% if request.user == comment.user  %}
+      <!-- if 문 작성 -->
+        <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="POST">
+          {% csrf_token %}
+          <input type="submit" value="삭제">
+        </form>
+      {% endif %}
+```
+### 참고
+- 인증된 사용자인 경우만 댓글 작성 및 삭제: @login_required
+```python
+@login_required
+def comment_create(request, article_pk):
+
+@login_required
+def comment_delete(request, article_pk, comment_pk):
+```
