@@ -1,11 +1,26 @@
 {% extends 'base.html' %}
+{% block style %}
+.wrap{
+  display: grid;
+  place-items: center;
+  min-height: 90vh;
+}
+{% endblock style %}
+
 
 {% block content %}
-<h1>New</h1>
-  <form action="{% url 'reviews:create' %}" method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit">
-  </form>
-  <a href="{% url 'reviews:index' %}">[back]</a>
+<div class="container wrap">
+  <div>
+    <h1>New</h1>
+      <form action="{% url 'reviews:create' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary">제출</button>
+          <a href="{% url 'reviews:index' %}" class="btn btn-primary ms-3">back</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock content %}

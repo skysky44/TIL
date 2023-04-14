@@ -1,33 +1,48 @@
 {% extends 'base.html' %}
 
+{% block style %}
+.line {
+  border-top: 3px solid #7D7E84;
+}
+
+.txt {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+
+{% endblock style %}
+
 {% block content %}
-<h2>{{ user }}님의 프로필 페이지</h2>
-
-<a href="{% url 'reviews:index' %}">뒤로 가기</a>
+<h2 class='m-3'><span class='text-danger'>{{ user }}</span>님의 <span class='text-primary'>프로필 페이지</span></h2>
 <hr>
 
-<h3>회원 정보</h3>
-<p>username - {{ user }}</p>
-<p>email - {{ user.email }}</p>
-<hr>
+<div class='m-3'>
+  <h3>회원 정보</h3>
+  <p class='mt-3'>username - {{ user }}</p>
+  <p>email - {{ user.email }}</p>
+</div>
+<div class='line mb-3 ms-2 me-2 mt-3'></div>
 
-<h3>작성한 후기 목록</h3>
+<h3 class='m-3 mb-4 text-primary'>작성한 후기 목록</h3>
 {% for review in reviews %}
-  <p>
-    <p>후기 번호 -
-      {{ review.pk }}
-    </p>
-    <p>
+  <div class='m-3'>
+    <p class='txt'>
       영화 이름 -
-      {{review.movie}}
+      {{ review.movie }}
     </p>
-    <p>
-        <a href="#">[detail]</a>
+    <p>내용 -
+      {{ review.content }}
     </p>
-  </p>
-  {% comment %} <a href="{% url 'reviews:detail' review.pk %}">[detail]</a> {% endcomment %}
+    
+    <div class='btn btn-warning'>
+      <a href="{% url 'reviews:detail' review.pk %}" style='text-decoration: none;' class='text-dark'>detail</a>
+    </div>
+  </div>
   <hr>
 {% endfor %}
-
+<div class='btn btn-secondary ms-3'>
+  <a href="{% url 'reviews:index' %}" class='text-white' style='text-decoration: none;'>뒤로 가기</a>
+</div>
 
 {% endblock content %}

@@ -1,39 +1,89 @@
 {% extends 'base.html' %}
 
+{% block style %}
+.back {
+  background-color : #525359;
+  {% comment %} background-color : #B6B7C5; {% endcomment %}
+}
+
+.wi {
+  width: 400px;
+}
+
+.textdeco {
+  font-size: 13px;
+  color: gray;
+}
+
+.line {
+  border-top: 2px solid #7D7E84;
+}
+
+.txt {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+{% endblock style %}
+
 {% block content %}
+{% load static %}
 
 <div>
 
-  {% if request.user.is_authenticated %}
-    <div>
-      <p><a href="{% url 'accounts:profile' user.pk %}">{{ user }}</a>님 안녕하세요!</p>
+  <div id="carouselExampleAutoplaying" class="carousel slide back" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="{% static 'reviews/abouttime.jpg' %}" class="d-block wi container-fluid" alt="...">
+      </div>
 
-      <form action="{% url 'accounts:logout' %}" method="POST" class="">
-        {% csrf_token %}
-        <input type="submit" value="로그아웃" autocomplete="off">
-      </form>
-      <a href="{% url 'reviews:create' %}">[후기 작성]</a>
+      <div class="carousel-item">
+        <img src="{% static 'reviews/lalaland.jpg' %}" class="d-block wi container-fluid" alt="...">
+      </div>
+
+      <div class="carousel-item">
+        <img src="{% static 'reviews/topgun.jpg' %}" class="d-block wi container-fluid" alt="...">
+      </div>
+
+      <div class="carousel-item">
+        <img src="{% static 'reviews/suzeme.jpg' %}" class="d-block wi container-fluid" alt="...">
+      </div>
     </div>
-  {% else %}
-  <a href="{% url 'accounts:signup' %} ">[회원가입]</a>
-  <a href="{% url 'accounts:login' %} ">[로그인]</a>
-  {% endif %}
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleRide" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleRide" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+  <div class="d-flex d-row ms-2 mt-2 justify-content-between">
+    <div class="d-flex d-row align-items-center">
+      <p><img src="{% static 'reviews/chevron-right.svg' %}" alt=""></p>
+      <h3>최신 리뷰</h3>
+    </div>
+    <p class="btn btn-secondary me-3 mt-1">
+      <a href="{% url 'reviews:create' %}" class='text-white' style='text-decoration: none;'>후기 작성</a>
+    </p>
+  </div>
+  
+  <div class='line mb-3 ms-2 me-2'></div>
 
 </div>
 {% for review in reviews %}
-  <p>
+  <div class='ms-3'>
+    <p class='textdeco'>후기 작성자 -
+      <a href="{% url 'reviews:detail' review.pk %}" style='text-decoration: none;'>{{ review.user }}</a>
+    </p>
+    <p class='txt'>영화 제목 - {{review.movie}}</p>
 
-    <p>후기 작성자 -
-      <a href="{% url 'reviews:detail' review.pk %}">{{ review.user }}</a>
-    </p>
-    <p>후기 번호 -
-      {{ review.pk }}
-    </p>
-    <p>
-      영화 이름 -
-      {{review.movie}}
-    </p>
-  </p>
+    <p>글 - {{ review.content }}</p>
+    
+  </div>
   {% comment %} <a href="{% url 'reviews:detail' review.pk %}">[detail]</a> {% endcomment %}
   <hr>
 {% endfor %}

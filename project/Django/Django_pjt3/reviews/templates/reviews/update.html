@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>Edit</h1>
-  <form action="{% url 'reviews:update' reviews.pk %}" method="POST">
+  <form action="{% url 'reviews:update' review.pk %}" method="POST">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="UPDATE">

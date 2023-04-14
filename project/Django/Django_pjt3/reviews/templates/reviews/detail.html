@@ -1,25 +1,101 @@
 {% extends 'base.html' %}
 
+{% block style %}
+.badge {
+  width: 70px;
+  height: 30px;
+}
+{% endblock style %}
+
+
 {% block content %}
-<h1>Detail</h1>
-  <p class="rp">작성자 - {{ review.user }}</p>
-  <p>후기 번호: {{ review.pk }}</p>
-  <p>후기 제목: {{ review.title }}</p>
-  <p>후기 내용: {{ review.content }}</p>
-  <p>영화 이름: {{ review.movie }}</p>
+<div class="container">
+  <div class'row m-1'>
+    <div class="col my-2">
+      <h2>상세 정보</h1>
+    </div>
+    <div class="d-flex col justify-content-end">
+      <a href="{% url 'reviews:index' %}" class="btn btn-secondary m-2">뒤로</a>
+      {% if request.user == review.user %}
+      <a href="{% url 'reviews:update' review.pk %}" class="btn btn-secondary m-2">수정</a>
+      <form action="{% url 'reviews:delete' review.pk  %}" method="POST">
+        {% csrf_token %}
+        <input class="btn  btn-outline-danger m-2" type="submit" value="삭제">
+      </form>
+      {% endif %}
+    </div>
+  </div>
 
-
-  {% if request.user == review.user %}
-    <a href="{% url 'reviews:update' review.pk %}">[UPDATE]</a>
-    <br><br>
-    <form action="{% url 'reviews:delete' review.pk  %}" method="POST">
-      {% csrf_token %}
-      <input type="submit" value="삭제">
-    </form>
-    <br>
+  {% if review.image %}
+    <p class= 'row justify-content-center'>
+      <img src="{{ review.image.url }}" alt="img" class="w-25 ">
+    </p>
   {% endif %}
-  <a href="{% url 'reviews:index' %}">[back]</a>
-  <hr>
+
+  <div class="row m-2">
+    <div class="badge bg-secondary mx-2 p-2">제목</div> {{ review.title }}
+  </div>
+  <div class="row m-2">
+    <div class="badge bg-secondary mx-2 p-2">작성자</div> {{ review.user }}
+  </div>
+  <div class="row m-2">
+    <div class="badge bg-secondary mx-2 p-2">영화이름</div> {{ review.movie }}
+  </div>
+  <div class="row m-2">
+    <div class="col-2 badge bg-secondary mx-2 p-2">내용</div><div class="col p-0">{{ review.content }}</div>
+  </div>
+
+  
+
+
+  <div class="container m-3">
+    <h3>
+      댓글
+    </h3>
+        <form action="{% url 'reviews:comment_create' review.pk %}" method="POST">
+      {% csrf_token %}
+      <div class="my-3 input-group">
+        {{ comment_form }}
+        <input type="submit" class="btn btn-secondary" value="댓글 작성">
+      </div>
+    </form>
+
+    <div class="d-flex row  justify-content-center ">
+      {% for comments in comment %}
+        <div class="card m-1 col-5">
+          <div class="card-body">
+            <div class="card-title d-flex justify-content-between">
+              <div class="">
+                <p class="badge bg-secondary p-2">
+                  {{ comments.user }}
+                </p>
+              </div>
+              <div class="">
+                {% if request.user == comments.user %}
+                  <form action="{% url 'reviews:comment_delete' review.pk comments.pk %}" method="POST">
+                  {% csrf_token %}
+                  <input type="submit" class="btn btn btn-outline-danger" value="삭제">
+                  </form>
+                {% endif %}
+              </div>
+              
+            </div>
+                <p class="p-2" >
+                  {{ comments.content }}
+                </p>
+          </div>
+  
+        </div>
+  
+      {% endfor %}
+
+
+    </div>
+
+
+  </div>
+
+</div>
 
 
 {% endblock content %}
