@@ -73,8 +73,8 @@ EMOTIONS = [
     {'label': '재밌어요', 'value': 1},
     {'label': '싫어요', 'value': 2},
     {'label': '화나요', 'value': 3},
+    {'label': '슬퍼요', 'value': 4},
 ]
-
 
 def detail(request, article_pk):
     article = Article.objects.get(pk=article_pk)
@@ -83,8 +83,10 @@ def detail(request, article_pk):
         label = emotion['label']
         value = emotion['value']
         count = Emote.objects.filter(article=article, emotion=value).count()
-        exist = Emote.objects.filter(article=article, emotion=value, user=request.user)
-        emotions.append(
+        # print(request.user)
+        if request.user.is_authenticated:
+            exist = Emote.objects.filter(article=article, emotion=value, user=request.user)
+            emotions.append(
             {
                 'label': label,
                 'value': value,
@@ -92,9 +94,18 @@ def detail(request, article_pk):
                 'exist': exist,
             }
         )
+        else:
+            emotions.append(
+                {
+                    'label': label,
+                    'value': value,
+                    'count': count,
+                }
+            )
 
     comments = article.comment_set.all()
     comment_form = CommentForm()
+    # print(emotions)
     context = {
         'emotions': emotions,
         'article': article,
