@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+  <div>
+    <h3>DETAIL</h3>
+    <p>게시글 작성자 -
+      {{article.user}}</p>
+    <p>
+      게시글 번호 -
+      {{article.pk}}
+    </p>
+    <p>
+      게시글 제목 -
+      {{article.title}}
+    </p>
+    <p>
+      게시글 내용 -
+      {{article.content}}
+    </p>
+    <p>
+      {% for emotion in emotions %}
+        <div>
+        {% if request.user.is_authenticated %}
+        {{emotion.queryset}}
+          <form action="{% url 'articles:emotes' article.pk emotion.value %}" method="POST">
+            {% csrf_token %}
+            {% if emotion.exist %}
+              <input type="submit" value="{{emotion.label}} 취소">
+            {% else %}
+              <input type="submit" value="{{emotion.label}}">
+            {% endif %}
+          </form>
+        {% else %}
+          <button disabled="disabled">{{emotion.label}}</button>
+        {% endif %}
+        <p>
+          게시글 {{emotion.label}} 수 -
+          {{ emotion.count }}
+        </p>
+      </div>
+      {% endfor %}
+    </p>
+
+
+    <a href="{% url 'articles:index' %}">[back]</a>
+  </div>
+  <hr>
+  <form action="{% url 'articles:comment_create' article.pk %}" method="post">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <input type="submit" value="댓글 작성">
+  </form>
+  <hr>
+
+  {% for comment in comments %}
+    <div>
+      <p>댓글 작성자 -
+        {{comment.user}}</p>
+      <p>댓글 번호 -
+        {{ comment.pk }}</p>
+      <p>
+        댓글 내용 -
+        {{comment.content}}
+      </p>
+      {% if comment.user == user %}
+        <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="POST">
+          {% csrf_token %}
+          <input type="submit" value="댓글 삭제">
+        </form>
+      {% endif %}
+    </div>
+    <hr>
+  {% endfor %}
+{% endblock content %}

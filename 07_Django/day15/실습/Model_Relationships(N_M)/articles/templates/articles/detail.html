@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+  <div>
+    <h3>DETAIL</h3>
+    <p>게시글 작성자 -
+      {{article.user}}</p>
+    <p>
+      게시글 번호 -
+      {{article.pk}}
+    </p>
+    <p>
+      게시글 제목 -
+      {{article.title}}
+    </p>
+    <p>
+      게시글 내용 -
+      {{article.content}}
+    </p>
+    <p>
+      {% if request.user.is_authenticated %}
+        <form action="{% url 'articles:likes' article.pk %}" method="POST">
+          {% csrf_token %}
+          {% if request.user in article.like_users.all %}
+          <input type="submit" value="좋아요 취소">
+          {% else %}
+          <input type="submit" value="좋아요">
+          {% endif %}
+        </form>
+      {% else %}
+        <input type="submit" value="좋아요" disabled>
+      {% endif %}
+      게시글 좋아요 수 - {{  article.like_users.all | length }} 
+    </p>
+    <a href="{% url 'articles:index' %}">[back]</a>
+  </div>
+  <hr>
+  <form action="{% url 'articles:comment_create' article.pk %}" method="post">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <input type="submit" value="댓글 작성">
+  </form>
+  <hr>
+
+  {% for comment in comments %}
+    <div>
+      <p>댓글 작성자 -
+        {{comment.user}}</p>
+      <p>댓글 번호 -
+        {{ comment.pk }}</p>
+      <p>
+        댓글 내용 -
+        {{comment.content}}
+      </p>
+      <p>
+        <p>
+          {% if request.user.is_authenticated %}
+            <form action="{% url 'articles:like_comments' article.pk  comment.pk %}" method="POST">
+              {% csrf_token %}
+              {% if request.user in comment.like_users.all %}
+              <input type="submit" value="좋아요 취소">
+              {% else %}
+              <input type="submit" value="좋아요">
+              {% endif %}
+            </form>
+          {% else %}
+            <input type="submit" value="좋아요" disabled>
+          {% endif %}
+          댓글 좋아요 수 - {{  comment.like_users.all | length }} 
+        </p>
+      </p>
+
+      {% if comment.user == user %}
+        <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="POST">
+          {% csrf_token %}
+          <input type="submit" value="댓글 삭제">
+        </form>
+      {% endif %}
+    </div>
+    <hr>
+  {% endfor %}
+{% endblock content %}
