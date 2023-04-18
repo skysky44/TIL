@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>INDEX</h1>
+  {% if user.is_authenticated %}
+    <div>
+      <h3>
+        <a href="{% url 'accounts:profile' user %}">
+          {{ user }}
+        </a>
+      </h3>
+      <div>
+        <form action="{% url 'accounts:logout' %}" method="POST">
+          {% csrf_token %}
+          <p>
+            <input type="submit" value="로그아웃" autocomplete="off">
+          </p>
+        </form>
+        <a href="{% url 'articles:create' %}">[글 작성]</a>
+      </div>
+    </div>
+  {% else %}
+    <div>
+      <a href="{% url 'accounts:login' %}">[로그인]</a>
+      <a href="{% url 'accounts:signup' %}">[회원가입]</a>
+    </div>
+  {% endif %}
+  {% for article in articles %}
+    <div>
+      <p>게시글 번호 -
+        {{ article.pk }}
+      </p>
+    </div>
+    <a href="{% url 'articles:detail' article.pk %}">[게시글 조회]</a>
+    <hr>
+  {% endfor %}
+
+
+  {% comment %} 페이지네이션 컴포넌트 시작 {% endcomment %}
+  <ul class="pagination justify-content-center">
+    {% comment %} 처음으로 이동{% endcomment %}
+    <li>
+      <a class="page-link" href="?page=1">처음으로</a>
+    </li>
+    {% comment %}
+        이전 페이지 버튼
+        이전 페이지가 존재할 경우 이전 페이지 버튼 활성화
+    {% endcomment %}
+    {% if articles.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ articles.previous_page_number }}">이전</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled">
+        <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+      </li>
+    {% endif %}
+    {% comment %}
+        페이지 번호 리스트 생성 반본북
+    {% endcomment %}
+    {% for page_number in articles.paginator.page_range %}
+      {% comment %}
+        페이지 번호가 무한히 생성되는 것을 막는 조건문
+        현재 페이지에서 +- 5 까지 생성
+      {% endcomment %}
+      {% if page_number >= articles.number|add:-5 and page_number <= articles.number|add:5 %}
+        {% if page_number == articles.number %}
+          <li class="page-item active" aria-current="page">
+            <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+          </li>
+        {% else %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+          </li>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    {% comment %}
+        다음 페이지 버튼
+        다음 페이지가 존재할 경우 다음 페이지 버튼 활성화
+    {% endcomment %}
+    {% if articles.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ articles.next_page_number }}">다음</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled">
+        <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+      </li>
+    {% endif %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ articles.paginator.num_pages }}">마지막으로</a>
+    </li>
+  </ul>
+  {% comment %} 페이지네이션 컴포넌트 끝 {% endcomment %}
+
+{%endblock content %}
