@@ -2447,3 +2447,445 @@ def comment_create(request, article_pk):
 @login_required
 def comment_delete(request, article_pk, comment_pk):
 ```
+
+## Django 15일차
+### Many to many relationships1
+#### M:N 관계 맛보기
+- 병원진료 시스템 모델 관계 만들기(환자-의사)
+  - N:1은 동일한 환자지만 다른 의사에계 예약하기 위해 객체를 하나더 만들어서 예약해야함. 새로운 객체 생성할 수 밖에 없음
+
+#### 중개 모델
+- 환자의 외래키 삭제하고 별도의 예약 모델(중개모델) 새로 작성
+- 예약 모델은 의사와 환자에 가각 N:1 관계
+
+```python
+class Doctor(models.Model):
+    name = models.TextField()
+
+    def __str__(self):
+        return f'{self.pk}번 의사 {self.name}'
+
+
+class Patient(models.Model):
+    doctors = models.ManyToManyField(Doctor, through='Reservation')
+    name = models.TextField()
+
+    def __str__(self):
+        return f'{self.pk}번 환자 {self.name}'
+
+
+class Reservation(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    symptom = models.TextField()
+    reserved_at = models.DateTimeField(auto_now_add=True)
+    # 
+
+    def __str__(self):
+        return f'{self.doctor.pk}번 의사의 {self.patient.pk}번 환자'
+
+```
+
+##### through argument
+- 중개 테이블을 수동으로 지정하는 경우 through 옵션을 사용하여 사용하려는 중개 테이블을 나타내는 Django 모델을 지정할 수 있음
+- 가장 일반적 용도는 "중개테이블에 '추가데이터'를 사용해 다대다 관계와 연결하려는 경우
+
+##### 정리
+- M:N 관계로 맺어진 두 테이블에는 변화가 없음
+- ManyToManyField는 중개 테이블을 자동으로 생성함
+- ManyToManyField는 M:N 관계를 맺는 두 모델 어디에 위치해도 상관 없음
+- 대신 필드 작성위치에 따라 참조와 역참조 방향을 주의할 것 
+- N:1은 완전한 종속의 관계였지만 M:N 은 의사에게 진찰 받는 환자, 환자를 진찰하는 의사의 두가
+
+
+##### ManyToManyField(to, **options)
+- many-to-many 관계 설정 시 사용하는 모델 필드
+- 모델 필드의 RelatedManager를 사용하여 관련 개체를 추가, 제거 또는 생성
+  - add(), remove(), create(), clear()
+
+##### ManyToManyField's Arguments
+1. related_name
+- 역참조시 사용하는 manager name을 변경
+```python
+class Article(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_articles')
+
+# 변경 전
+user.like_users_set.all()
+# 변경 후
+user.like_articles.all()
+```
+2. through
+- 중개 테이블을 직접 작성하는 경우, through 옵션을 사용하여 중개테이블을 나타내는 Django 모델을 지정
+- 일반적으로 중개 테이블에 추가 데이터를 사용하는 다대다 관계와 연결하려는 경우(extra data with a many-to-may relationship)에 사용 됨
+
+3. symmetrical
+- True일 경우
+  - _set 매니저를 추가하지 않음
+  - source 모델 인스턴스도 source 모델 인스턴스를 자동으로 참조하도록 함(대칭)
+  - 즉 개가 당신의 친구면 당신도 내 친구가 됨
+- False일 경우: 대칭을 원하지 않는 경우
+  - Follow 기능 구현에서 다시 확인할 예정
+
+##### M:N에서의 methods
+- add()
+  - 지정된 객체를 관련 객체 집합에 추가
+  - 이미 존재하는 관계에 사용하면 관계가 복제 되지 않음
+- remove()
+  - 관련 객체 집합에서 지정된 모델 개체를 제거
+
+#### Many to many relationships(N:M or M:N)
+- 한테이블의 0개이상의 레코드가 다른 테이블의 0개 이상의 레코드와 관련된 경우
+- 양쪽 모두에서 N:1 관계를 가짐
+
+##### Article(M) - User(N)
+- 게시글은 회원으로부터 0개 이상의 좋아요를 받을 수 있고, 회원은 0개 이상의 게시글에 좋아요를 누를 수 있다.
+
+##### 모델 관계 설정
+1. ManyToManyField 작성 (중간 단계)
+```python
+# articles/models.py
+class Article(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    title = models.CharField(max_length=10)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+```
+2. 모델 관계 설정
+- migration 진행 후 에러 확인
+- like_users 필드 생성 시 자동으로 역참조에는 .article_set 매니저가 생성됨
+- 그러나 이전 N:1(Article-User)관계에서 이미 해당 매니저를 사용 중
+  - user.article_set.all() -> 해당 유저가 작성한 모든 게시글 조회ㅏ
+- user가 작성한 글들(user.article_set)과 user가 좋아요를 누른글(user.article_set)을 구분할 수 없게 됨
+- user와 관계된 ForeignKey 혹은 ManyToManyField 중에 하나에 related_name을 작성해야 함
+
+- user.article_set
+  - N:1 : 유저가 작성한 게시글 vs M:N : 유저가 좋아요한 게시글  (related manager 충돌)
+
+3. 모델 관계 설정(최종 단계)
+- related_name 작성 후 Migration
+```python
+# articles/models.py
+class Article(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # users = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_articles') #여기
+    title = models.CharField(max_length=10)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+```
+4. 모델 관계 설정
+- 생성된 중개 테이블 확인
+
+##### User - Article간 사용 가능한 related manager 정리
+- article.user
+  - 게시글을 작성한 유저
+- user.article_set
+  - 유저가 작성한 게시글(역참조) - N:1
+- article.like_users
+  - 게시글을 좋아요한 유저 - M:N
+- user.like_articles
+  - 유저가 좋아요한 게시글(역참조) - M:N
+
+
+#### 좋아요 구현
+1. url 및 view 함수 작성
+```python
+# articles/urls.py
+app_name = 'articles'
+urlpatterns = [
+    path('<int:article_pk>/likes/', views.likes, name='likes'),
+]
+
+# articles/views.py
+def likes(request, article_pk):
+    # 좋아요를 누른 대상 게시글
+    article = Article.objects.get(pk=article_pk)
+
+    # 좋아요 관계를 추가 or 삭제
+    # 현재 좋아요를 요청하는 유저가 해당 게시글의 좋아요를 누른 유저 목록에 있는지 없는지를 확인
+    if request.user in article.like_users.all():
+
+    # # 해당 게시글의 좋아요를 누른 유저에서 현재 요청하는 유저의 존재를 조회(조회해야하는 데이터가 너무 커지면 이걸 쓰는게 나음. 하나가 존재하는지 아닌지 알고 싶을 때)
+    # if article.like_users.filter(pk=request.user.pk).exists():
+
+        # 좋아요 취소
+        article.like_users.remove(request.user)
+        # request.user.like_articles.remove(article) # 역참조(위와 동일)
+    else:
+        # 좋아요 추가
+        article.like_users.add(request.user)
+        # request.user.like_articles.add(article) # 역참조
+    return redirect('articles:index')
+```
+
+2. index 템플릿에서 각 게시글에 좋아요 버튼 출력
+```html
+<!-- articles/index.html -->
+  {% for article in articles %}
+    <p>작성자: {{ article.user }}</p>
+    <p>제목: 
+      <a href="{% url 'articles:detail' article.pk %}">{{ article.title }}</a>
+    </p>
+    <p>내용: {{ article.content }}</p>
+    <form action="{% url 'articles:likes' article.pk %}" method="POST">
+      {% csrf_token %}
+      {% if request.user in article.like_users.all %}
+        <input type="submit" value="좋아요 취소">
+      {% else %}
+        <input type="submit" value="좋아요">
+      {% endif %}
+    </form>
+    <hr>
+  {% endfor %}
+```
+
+3. 좋아요 버튼 출력 확인
+
+4. 좋아요 버튼 클릭 후 DB 테이블 확인
+
+### 참고
+- .exists() : QuerySet에 결과가 포함되어 있으면 True를 반환하고 그렇지 않으면 False를 반환 특히 큰 QuerySet에 있는 특정 개체의 존재와 관련된 검색에 유용
+- exists() 적용
+
+```python
+# articles/views.py
+def likes(request, article_pk):
+    article = Article.objects.get(pk=article_pk)
+
+    # if request.user in article.like_users.all():
+    #  위에서 아래로 변경
+    if article.like_users.filter(pk=request.user.pk).exists(): # 여기
+
+        article.like_users.remove(request.user)
+    else:
+        article.like_users.add(request.user)
+    return redirect('articles:index')
+```
+
+## Django 16일차
+### Many to many relationships 2
+### Profile 구현
+1. 자연스러운 follow 흐름을 위한 프로필 페이지 작성
+```python
+# accounts/urls.py
+urlpatterns = [
+    path('<username>/', views.profile, name = 'profile'),
+        #str: 생략가능
+        # username 밑에 다른 url은 작동 안함
+        # 1. 맨아래에 두기 2. 'profile/<username>/로 섞어주기 두가지 방법
+]
+
+# account/views.py
+from django.contrib.auth import get_user_model
+
+def profile(request, username):
+    User = get_user_model()
+    person = User.objects.get(username=username)
+    context = {
+        'person': person, 
+    }
+    return render(request, 'accounts/profile.html', context)
+```
+
+2. profile 템플릿 작성
+```html
+<!-- accounts/profile.html -->
+
+  <h3>{{ person.username }}가 작성한 모든 게시글</h3>
+  {% for article in person.article_set.all  %}
+    <div>{{ article.title }}</div>
+  {% endfor %}
+
+  <h3>{{ person.username }}가 작성한 모든 댓글</h3>
+  {% for comment in person.comment_set.all  %}
+    <div>{{ comment.content }}</div>
+  {% endfor %}
+
+  <h3>{{ person.username }}가 좋아요를 누른 모든 게시글</h3>
+  {% for article in person.like_articles.all  %}
+    <div>{{ article.title }} </div>
+  {% endfor %}
+```
+3. profile 템프릿으로 이동할 수 있는 하이퍼 링크 작성
+```html
+ <!-- articles/index.html -->
+    <a href="{% url 'accounts:profile' user.username %}">내 프로필</a>
+
+     <p>작성자:
+      <a href="{% url 'accounts:profile' article.user.username %}">{{ article.user }}</a>
+    </p>
+```
+4. 출력 확인
+
+### User & User - follow 구현
+- 유저는 0이상의 다른 유저와 관련된다.
+  - 유저는 다른 유저로부터 0개 이상의 팔로우를 받을 수 있고, 유저는 0명 이상의 다른 유저들에게 팔로잉 할 수 있다.
+
+#### Follow 구현
+1. ManyToManyField 작성 및 Migration 진행
+```python
+# accounts/models.py
+class User(AbstractUser):
+    followings = models.ManyToManyField('self', related_name='followers', symmetrical=False)
+    # 정참조인데 자기자신 일때 역참조 이름 만들어야 함
+    # symmetrical 기본값 True면 대칭이라서 변경 필요
+```
+
+2. 중개테이블 필드 확인
+- accounts_user_followings
+- id / from_user_id / to_user_id
+
+3. url 및 view 함수 작성
+```python
+# accounts/urls.py
+urlpatterns = [
+    path('<int:user_pk>/follow/', views.follow, name='follow'),
+]
+
+# accounts/views.py
+
+login_required
+def follow(request, user_pk):
+    # 팔로우를 할 대상이 필요
+    User = get_user_model()
+    you = User.objects.get(pk=user_pk)
+    me = request.user
+    if you != me:
+        # 팔로우 or 언팔로우
+        if me in you.followers.all():
+            # 언팔로우
+            you.followers.remove(me)
+            # me.followings.remove(you)
+        else:
+            # 팔로우
+            you.followers.add(me)
+            # me.followings.add(you)
+    return redirect('accounts:profile', you.username) # 상대방 프로필 페이지이기 때문 you.username
+```
+
+4. 프로필 유저의 팔로잉, 팔로워 수 & 팔로우 , 언팔로우 버튼 작성
+```html
+<!-- accounts/profile.html -->
+  <div>
+    팔로잉 : {{ person.followings.all|length }} / 팔로워 {{ person.followers.all|length }}
+  </div>
+
+  {% if request.user != person %}
+  <div>
+    <form action="{% url 'accounts:follow' person.pk %}">
+      {% csrf_token %}
+      {% if request.user in person.followers.all %}
+        <input type="submit" value="언팔로우">
+      {% else %}
+        <input type="submit" value="팔로우">
+      {% endif %}
+    </form>
+  </div>
+  {% endif %}
+```
+
+5. 팔로우 버튼 클릭 후 팔로우 버튼 변화 및 중개 테이블 데이터 확인
+
+
+### Fixtures
+- Django가 데이터베이스로 가져오는 방법을 알고 있는 데이터 모음
+- Django가 직접 만들기 때문에 데이터 베이스 구조에 맞추어 작성 되어있음
+
+- Django는 fixtures를 사용해 모델에 초기 데이터를 제공
+#### 초기데이터의 필요성
+- 협업 하는 a,b 유저가 프로젝트 처음 시작할 때 미리 DB를 채움
+- Django에서는 fixtures를 사용해 앱에 초기 데이터(initial data)를 제공할 수 있다.
+
+#### 초기 데이터 제공하기
+- 사전준비
+  - M:N까지 모두 작성된 프로젝트에서 유저, 게시글, 댓글, 좋아요 등 각 테이터 최소 2개 이상 생성해두기
+
+- fixtures 명령어
+  - dumpdata: 생성(데이터 추출)
+  - loaddata: 로드(데이터 입력)
+
+#### dumpdata
+- 데이터베이스의 모든 데이터를 출력, 여러모델을 하나의 json 파일로 만들수 있음
+```bash
+# 작성 예시
+$ python manage.py dumpdata [app_name[.ModelName]] [app_name[.ModelName]] ... > filename.json
+```
+#### fixtures 생성
+1. 
+```bash
+$ python manage.py dumpdata --indent 4 articles.article > articles.json
+```
+
+2.
+1. 
+```bash
+$ python manage.py dumpdata --indent 4 articles.user > users.json
+$ python manage.py dumpdata --indent 4 articles.comment > comments.json
+```
+
+#### loaddata
+- fixtures 데이터를 데이터베이스로 불러오기
+
+##### fixtures 기본 경로
+- app_name/fixtures
+- django는 설치된 모든 app의 디렉토리에서 fixtures 폴더 이후의 경로로 fixtures 파일을 찾아 load 함
+
+##### fixtures 불러오기
+1.
+```python
+# 해당 위치로 fixture 파일 이동
+articles/
+  fixtures/
+    articles.json
+    users.json
+    comments.json
+```
+- db.sqlite3 파일 삭제 후 migrate 진행
+
+2.
+```bash
+$ python manage.py loaddata articles.json users.json cooments.json
+``` 
+- load 후 데이터가 잘 입력 되었는지 확인하기
+
+#### loaddata 순서 주의사항
+- loaddata를 한번에 실행하지 않고 하나씩 실행한다면 모델 관계에 따라 순서가 중요할 수 있음
+  - comment는 article에 대한 key 및 user에 대한 key가 필요
+  - article은 user에 대한 key가 필요
+- 즉, 현재 모델 관계에서는 user -> article -> comment 순으로 data를 넣어야 오류 발생하지 않음
+```bash
+$ python manage.py loaddata users.json
+$ python manage.py loaddata articles.json
+$ python manage.py loaddata comments.json
+``` 
+
+### 참고
+#### 모든 모델을 한번에 dump 하기
+```bash
+# 3개의 모델을 하나의 json 파일로
+$ python manage.py dumpdata --indent 4 articles.article articles.comment accounts.user > data.json
+
+# 모든 모델을 하나의 json 파일로
+$ python manage.py dumpdata --indent 4 > data.json
+``` 
+
+- fixtures는 직접 만드는 것이 아니다
+  - 반드시 dumpdata를 사용하여 생성하는 것
+
+#### loaddata 시 encoding codec 관련 에러가 발생하는 경우
+- 2가지 방법 중 택 1
+##### dumpdata 시 추가 옵션 작성
+```bash
+$ python -Xutf8 manage.py dumpdata [생략]
+``` 
+
+##### 메모장 활용
+  1. 메모장으로 json 파일열기
+  2. 다른이름으로 저장 클릭
+  3. 인코딩을 UTF8로 선택 후 저장
+
