@@ -2889,3 +2889,5 @@ $ python -Xutf8 manage.py dumpdata [생략]
   2. 다른이름으로 저장 클릭
   3. 인코딩을 UTF8로 선택 후 저장
 
+
+## Django 17일차
