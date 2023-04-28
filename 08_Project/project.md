@@ -13,10 +13,21 @@ $ git branch -r
 
 # 3. models라는 브랜치를 만들어 origin/models 브랜치 가져오기
 
-$ git checkout -t origin/models
+$ git checkout -t origin/models 
 
 # 4. 기존 브랜치로 돌아가기
 $ git checkout [기존 로컬 브랜치명]
 
-# 5. 현재 브랜치에 models 브랜치 merge
-$ git merge models
+# 5. 현재 브랜치에 models  브랜치 merge
+$ git merge models 
+```
+
+## 230428
+```bash
+vi plates/models.py
+# 텍스트에디터 vim improved
+
+python -Xutf8 manage.py loaddata posts.json reviews.json
+
+git rebase --continue
+```
