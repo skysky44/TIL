@@ -2891,3 +2891,206 @@ $ python -Xutf8 manage.py dumpdata [생략]
 
 
 ## Django 17일차
+
+
+## Django 18일차
+
+### Django rest framework
+
+#### HTTP Request Methods
+- 리소스(resource, 자원)에 대한 행위(수행하고자 하는 동작)를 정의 HTTP verbs 라고도 함
+
+#### 대표 HTTP Request Methods
+1. GET
+- 서버에 리소스의 표현을 요청
+- GET을 사용하는 요청은 데이터만 검색해야 함
+2. POST
+- 데이터를 지정된 리소스에 제출
+- 서버의 상태를 변경
+3. PUT
+- 요청한 주소의 리소스를 수정
+4. DELETE
+- 지정된 리소스를 삭제
+
+#### HTTP response status codes
+- 특정 HTTP 요청이 성공적으로 완료 되었는지 여부를 나타냄
+- 응답은 5개의 그룹으로 나뉨
+  - informational responses: 100-199
+  - Successful responses: 200-299
+  - Redirection messages: 300-399
+  - Client error responses: 400-499
+  - Server error responses: 500-599
+
+
+### REST API
+
+#### API(application programming interface)
+- 애플리케이션과 프로그래밍으로 소통하는 방법
+- API는 복잡한 코드를 추상화하여 대신 사용할 수 있는 몇가지 더 쉬운 구문을 제공
+
+#### Web API
+- 웹서버 또는 웹브라우저를 위한 API
+- 현재 웹 개발은 모든 것을 하나부터 열까지 직접 개발하기보다 여러 open API를 활용하는 추세
+- 대표적인 Third Party Open API 서비스 목록
+  - YoutubeAPI, Naver Papago Kakao Map API 등
+- API는 다양한 타입의 데이터를 응답
+  - html, json 등
+
+
+## REST(Representational State Transfer)
+- API Server를 개발하기 위한 일종의 소프트웨어 설계 방법론
+  - 2000년 로이 필딩의 박사학위 논문에서 처음 소개후 네트워킹 문화에 널리퍼짐
+- `소프트웨어 아키텍쳐 디자인 제약 모음`(a group of software architecture design constraints)
+- REST 원리를 따르는 시스템을 `RESTful` 하다고 부름
+- `자원을 정의`하고 `자원에 대한 주소를 지정`하는 전반적인 방법을 서술
+
+## REST에서 자원을 정의하고 주소 지정하는 방법
+1. 자원의 식별 : URL
+2. 자원의 행위 : HTTP Methods
+3. 자원의 표현: 궁극적으로 표현되는 결과물, JSON으로 표현된 데이터를 제공
+
+## REST API
+- REST라는 API 디자인 아키텍처를 지켜 구현한 API
+
+
+## REST framework
+- Django를 기반으로 한 웹 API 개발을 쉽게 할 수 있는 프레임워크
+- REST 아키텍처 스타일을 따르며, API 뷰, 시리얼라이저, 라우터 등을 제공
+- JSON 포맷을 기본으로 지원
+- 인증, 권한, 캐싱 등의 고급 기능도 제공
+- Django ORM을 이용하여 데이터베이스와 상호작용하고, Django 템플릿 시스템을 사용하여 API 디자인을 쉽게 관리 가능
+- 개발자가 보다 효율적으로 웹 API를 개발할 수 있도록 도움
+
+### Response JSON
+- 지금까지 Django로 작성한 서버는 사용자에게 페이지만 응답하고 있었음
+- 하지만 사실 서버가 응답할 수 있는 것은 페이지(html) 뿐만 아니라 다양한 데이터 타입을 응답할 수 있음
+- Django는 더이상 Template 부분에 대한 역할을 담당하지 않게 되면 Front-end와 Back-end가 분리되어 구성되게 됨
+
+![image](https://user-images.githubusercontent.com/110805149/233928600-6b908ee5-5006-431c-aa44-b2696c083581.png)
+
+### Django REST framework(DRF)
+- Django에서 Restful API 서버를 쉽게 구축할 수 있도록 도와주는 오픈소스 라이브러리
+- https://www.django-rest-framework.org/
+
+#### python에서 json 응답 받아보기
+```python
+import requests
+from pprint import pprint
+
+response = requests.get('http://127.0.0.1:8000/api/v1/articles/')
+
+# json을 python 타입으로 변환
+result = response.json()
+
+# print(type(result))
+# pprint(result)
+# pprint(result[0])
+pprint(result[0].get('title'))
+```
+
+### Serialization(직렬화)
+- 여러시스템에서 활용하기 위해 데이터 구조나 객체 상태를 나중에 재구성할 수 있는 포맷으로 변환하는 과정
+- 즉, 어떠한 언어나 환경에서도 `나중에 다시 쉽게 사용할 수 있는 포맷으로 변환하는 과정`
+![image](https://user-images.githubusercontent.com/110805149/233929855-1fd97c04-0a45-4b76-a140-1b60e499c6f4.png)
+- Serialization in DRF : Serialized data를 JSON으로 변환
+
+### DRF - Single Model
+- Postman 설치
+- Postman : API 구축하고 사용하기 위한 플랫폼, API를 빠르게 만들 수 있는 여러 도구 및 기능을 제공
+
+#### ModelSerializer 작성
+- articles/serializer.py 생성
+- serializer.py 위치나 파일명은 자유롭게 작성 가능
+
+```python
+from rest_framework import serializers
+from .models import Article
+class ArticleListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article
+        fields = ('id', 'title', 'content',)
+```
+#### ModelSerializer
+- 모델 필드에 해당하는 필드가 있는 Serializer 클래스를 자동으로 만듦
+1. Model 정보에 맞춰 자동으로 필드 생성
+2. serializer에 대한 유효성 검사기를 자동으로 생성
+3. .create() 및 .update()의 기본 구현 메서드가 포함됨
+
+- URL과 HTTP requests methods 설계
+![image](https://user-images.githubusercontent.com/110805149/233934407-8cda17d7-6773-4b35-ac9b-b95ae0650389.png)
+
+#### GET, POST, PUT, DELETE
+- 코드 한 번에 
+```python
+# articles/urls.py
+urlpatterns = [
+    path('articles/', views.article_list),
+    path('articles/<int:article_pk>/', views.article_detail),
+]
+
+
+# articles/views.py
+# from django.shortcuts import render (이제 필요 없음)
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework import status
+from .models import Article
+from .serializers import ArticleListSerializer, ArticleSerializer
+
+# Create your views here.
+# drf는 api view 데코레이터 필수임
+# 4. 해당 view 함수가 어떤 http 요청 메서드를 허용하는지 결정하는 데코레이터 작성(drf의 view함수에서 필수)
+@api_view(['GET', 'POST'])
+def article_list(request):
+    if request.method == 'GET':
+        # 1. 제공할 게시글 목록 조회
+        articles = Article.objects.all()
+
+        # 2. 게시글 목록 데이터를 직렬화(serialization)
+        serializer = ArticleListSerializer(articles, many=True) #many 앞의 데이터가 다중데이터(쿼리셋: 객체모음)일때 True로 단일일 때 false
+
+        # 3. 직렬화된 데이터를 json 데이터로 응답
+        return Response(serializer.data) 
+            #.data 그냥 문법임
+
+    elif request.method == 'POST':
+        # 사용자 데이터를 받아서 serializer로 직렬화
+        serializer = ArticleSerializer(data=request.data)
+        # request.post였는데 drf에서는 request.data
+        # 유효성 검사
+        if serializer.is_valid():
+            # drf가 장고개발자위해 똑같이 is_valid만들어둠
+            serializer.save()
+            # 생성 성공 시 201 응답
+            # 원래는 성공 시 status 200이 기본값인데 정확히는 201이 맞음
+            return Response(status=status.HTTP_201_CREATED)
+        # 생성 실패 시 400 응답
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'DELETE', 'PUT'])
+def article_detail(request, article_pk):
+    article = Article.objects.get(pk=article_pk)
+
+    if request.method == 'GET':
+        serializer = ArticleSerializer(article)
+        # 단일데이터 many 없어도 됨
+        return Response(serializer.data)
+
+    elif request.method == 'DELETE':
+        article.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+        # 삭제 성공 204
+
+    elif request.method == 'PUT':
+        # 사용자 데이터를 받아서 serializer로 직렬화 + 기존 데이터
+        serializer = ArticleSerializer(article, data=request.data)
+        # 앞이 instance 뒤에 객체
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+            # 수정은 생성의 하나로 봐서 status 따로 없음. 규약에 맞춰 쓰는 것뿐
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) - 생략 가능(is_valid(raise_exception=True) 대체)
+```
+
+#### 'api_view' decorator
+- DRF
