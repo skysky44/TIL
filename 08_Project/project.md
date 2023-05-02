@@ -31,3 +31,96 @@ python -Xutf8 manage.py loaddata posts.json reviews.json
 
 git rebase --continue
 ```
+
+
+## 230502
+### 소셜 로그인 (카카오 api) 순서 대로
+
+#### django-allauth 설치 및 기본 세팅
+```bash
+# 라이브러리 설치
+pip install django-allauth
+```
+
+```python
+# settings.py
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+
+
+INSTALLED_APPS = [
+
+    # 카카오톡 소셜 로그인 관련 부분
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.kakao',
+    
+]
+
+
+SITE_ID = 1
+LOGIN_REDIRECT_URL = '/'  # 로그인 후 리다이렉트 될 경로
+
+
+# urls.py - 프로젝트 폴더 안에 urls.py
+
+urlpatterns = [
+	
+    # 소셜로그인 관련 url
+    path('accounts/', include('allauth.urls')),
+
+]
+
+```
+#### 마이그래이션
+
+```bash
+# 마이그래이션
+python manage.py makemigrations
+python manage.py migrate
+
+#서버 실생
+python manage.py runserver
+```
+
+#### admin 페이지 접속
+- 소셜 애플리케이션에 클라이언트 아이디와 비밀 키 등록 
+- 또는(위아래 둘중 택 1)
+- settings.py에 아래 코드 추가
+```python
+SOCIALACCOUNT_PROVIDERS = {
+    'kakao': {
+        'APP': {
+            'client_id': 'ebf3ef3af88a14332db7d305424cc5f5',
+            'secret': 'ph9pfWMBdkqx5Vijx0q9XY9ny4Civ6FC',
+            'key': '',
+        },
+        'SCOPE': ['account_email', 'profile_image', 'profile_nickname'],# 권한
+        'PROFILE_FIELDS': ['nickname', 'profileImageURL', 'email'], # 요청 정보 종류
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+    }
+}
+```
+
+#### 템플릿 추가
+
+```html
+<!-- login.html -->
+{% load socialaccount %}
+
+<a href="{% provider_login_url 'kakao' method='oauth2' %}">
+카카오톡 로그인
+</a>
+```
+#### 참고
+- 카카오 디벨로퍼 사이트에서 rest api key 와 secret 발급(다른 문서 참고)
+
+
+## 230503
+- 다중 이미지 추가 드디어 성공
