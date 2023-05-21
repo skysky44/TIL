@@ -107,6 +107,13 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 ```
+# 로그인 버튼
+```html
+{% load socialaccount %}
+<a class='' href="{% provider_login_url 'kakao' process="login" method='oauth2'%}">
+  <i class=""></i>
+</a>
+```
 
 #### 템플릿 추가
 
